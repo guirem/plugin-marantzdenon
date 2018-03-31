@@ -1,11 +1,17 @@
-Plugin pour commander les amplificateurs Marantz ou Denon récents. Vous pourrez contrôler
-les entrées à utiliser, sortie de veille, mettre en veille
+Plugin pour commander les amplificateurs Marantz ou Denon récents. Il s'agit d'une reprise du plugin denonavr mais mis à jour pour les amplis plus récents.
+
+Vous pourrez contrôler les entrées à utiliser, sortie de veille, mettre en veille
 l’amplificateur et contrôler le volume, activer le mode sleep. 
 Vous avez aussi un retour d’état
 indiquant si la zone est active, le niveau de volume, l’entrée
 selectionnée et le type audio.
 
-Pour les amplis plus anciens, le plugin denonavr fonctionne toujours.
+> **Fonctionne avec**
+> Marantz M-CR511 & Marantz M-CR611
+> Denon AVR X 3000/4000 (non testé)
+> Autres modèles Denon/Marantz non confirmé
+
+Pour les amplis plus anciens, le plugin original denonavr fonctionne toujours.
 
 Configuration du plugin 
 =======================
@@ -67,5 +73,3 @@ Pour cela la commande action devra avoir comme valeur ce qui se trouve dans le t
 > 
 > Le retour du volume n'a pas l'air de fonctionner sur tous les modèles (bug)
 
-Changelog détaillé :
-<https://github.com/guirem/plugin-marantzdenon/commits/stable>
