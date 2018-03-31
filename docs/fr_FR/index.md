@@ -7,9 +7,12 @@ indiquant si la zone est active, le niveau de volume, l’entrée
 selectionnée et le type audio.
 
 > **Fonctionne avec**
-> Marantz M-CR511 & Marantz M-CR611
-> Denon AVR X 3000/4000 (non testé)
-> Autres modèles Denon/Marantz non confirmé
+> - Marantz M-CR511 & Marantz M-CR611
+>
+> - Denon AVR X 3000/4000 (non testé)
+>
+> - Autres modèles Denon/Marantz non confirmé
+>
 
 Pour les amplis plus anciens, le plugin original denonavr fonctionne toujours.
 
