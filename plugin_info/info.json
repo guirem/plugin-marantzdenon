@@ -1,0 +1,11 @@
+{
+	"id" : "marantzdenon",
+	"name" : "Marantz Denon",
+	"description" : "Plugin permettant de piloter les amplificateurs Denon / Marantz",
+	"licence" : "AGPL",
+	"author" : "Guirem",
+	"require" : "3.0",
+	"category" : "multimedia",
+	"changelog" : "https://jeedom.github.io/plugin-marantzdenon/#language#/changelog",
+	"documentation" : "https://jeedom.github.io/plugin-marantzdenon/#language#/"
+}
