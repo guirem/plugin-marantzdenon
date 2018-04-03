@@ -733,7 +733,7 @@ class marantzdenonCmd extends cmd {
 				} else if ($cmd == 'refresh' || $cmd == 'reachable') {
 					// do nothing
 				} else {	// other commands
-					$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?' . strtoupper($cmd) );
+					$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?' . urlencode(strtoupper($cmd)) );
 					$request_http->exec();
 				}
 				if ( $index==count($cmds) ) {	// update on last cmd

@@ -11,6 +11,8 @@ selectionnée et le type audio.
 
 - Denon AVR X 3000/4000 (non testé)
 
+- Très probablement Denon CEOL Nx
+
 - Probablement d'autres modèles Denon/Marantz (ex: CEOL Nx)
 
 
@@ -37,7 +39,7 @@ Configuration des équipements
 La configuration des équipements Marantz/Denon récents est accessible à partir du menu
 Plugins puis multimedia.
 
-Vous retrouvez ici toute la configuration de votre équipement :
+**Onglet Equipement** :
 
 -   **Nom de l’équipement Denon** : nom de votre équipement,
 
@@ -68,38 +70,27 @@ Vous retrouvez ici toute la configuration de votre équipement :
 -   **Peut être éteint** : Ne génère pas d'erreurs si l'équipement est débranché.
 
 
-En dessous vous retrouvez la liste des commandes :
+**Onglet Commandes**
 
--   **Nom** : le nom affiché sur le dashboard,
+Les commandes de bases sont générées automatiquement en fonction du modèle de
+votre amplificateur. Si le modèle n'est pas connu il prendra une configuration la plus étendue.
+Il est possible de les renommer, tester et configurer les paramêtres d'apparence.
 
--   **Type** : seulement type action est disponible,
+Vous pouvez également ajouter de nouvelles commandes.
 
--   **Commande brute** : la commande brute (voir spécifications),
+![Alt text](../assets/command.png "Custom command")
 
--   **Paramêtres** : Afficher / historiser,
-
--   **Options** : options supplémentaires pour les actions,
-
--   **Action** : permet d’afficher la fenêtre de
-    configuration avancée de la commande et tester la commande,
-
-> **Note**
->
-> Les commandes de bases sont générées automatiquement en fonction du modèle de
-> votre amplificateur. Si le modèle n'est pas connu il prendra une configuration la plus étendue.
-> 
-> Le retour du volume n'a pas l'air de fonctionner sur tous les modèles (bug)
 
 Commandes personalisées 
 =============================
 
 Il est possible d'ajouter des commandes personalisées. La spécification en contient beaucoup et est disponible <a target="_blank" href="../assets/AVRX4000_PROTOCOL(10_3_0)_V03.pdf">en local</a> ou <a target="_blank" href="https://usa.denon.com/us/product/hometheater/receivers/avrx4000?docname=AVRX4000_PROTOCOL(10%203%200)_V03.pdf">en ligne</a>.
 
+![Specification Extract](../assets/spec.png "Specification Extract")
+
 Pour cela la commande action devra avoir comme valeur ce qui se trouve dans le tableau des commandes disponibles de la doc.
 
 Il est également possible de créer des séquences en séparant les commandes par ',' (une valeur numérique marque une pause en seconde).
-
-![Alt text](../assets/command.png "Custom command")
 
 Exemples 
 
