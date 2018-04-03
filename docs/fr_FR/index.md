@@ -1,3 +1,6 @@
+Description du plugin 
+=============================
+
 Plugin pour commander les amplificateurs Marantz ou Denon récents. Il s'agit d'une reprise du plugin denonavr mais mis à jour pour les amplis plus récents.
 
 Vous pourrez contrôler les entrées à utiliser, sortie de veille, mettre en veille
@@ -5,6 +8,9 @@ l’amplificateur et contrôler le volume, activer le mode sleep.
 Vous avez aussi un retour d’état
 indiquant si la zone est active, le niveau de volume, l’entrée
 selectionnée et le type audio.
+
+![Denon AVR X4000](../assets/ampli1.png "Denon AVR X4000")
+![Marantz CR511](../assets/ampli2.png "Marantz CR511")
 
 **Modèle compatibles**
 - Marantz M-CR511 & Marantz M-CR611
@@ -39,7 +45,7 @@ Configuration des équipements
 La configuration des équipements Marantz/Denon récents est accessible à partir du menu
 Plugins puis multimedia.
 
-**Onglet Equipement** :
+### Onglet Equipement:
 
 -   **Nom de l’équipement Denon** : nom de votre équipement,
 
@@ -70,7 +76,7 @@ Plugins puis multimedia.
 -   **Peut être éteint** : Ne génère pas d'erreurs si l'équipement est débranché.
 
 
-**Onglet Commandes**
+### Onglet Commandes
 
 Les commandes de bases sont générées automatiquement en fonction du modèle de
 votre amplificateur. Si le modèle n'est pas connu il prendra une configuration la plus étendue.
@@ -93,13 +99,13 @@ Pour cela la commande action devra avoir comme valeur ce qui se trouve dans le t
 Il est également possible de créer des séquences en séparant les commandes par ',' (une valeur numérique marque une pause en seconde).
 
 Exemples 
-
+```
 - **Z207** : Volume de la zone 2 au niveau 7.
 
 - **PWON,3,mute_on,4,MV04,SIIRADIO** : Allumer, attendre 3 secondes, mute, attendre 4 secondes, Volume à 4, mettre la Radio
 
 - **SIIRADIO,3,SLEEP060** : Mettre la Radio, attendre 3 secondes, Veille dans 1 heure.
-
+```
 
 
 
