@@ -22,7 +22,7 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class marantzdenon extends eqLogic {
 	/*     * *************************Attributs****************************** */
 
-	const MAX_VOLUME = 98;//98;//19;
+	const MAX_VOLUME = 98;//19;
 	const MIN_VOLUME = 0;//-79;
 	
 	//const URL_GET = '/goform/formMainZone_MainZoneXml.xml';
@@ -638,22 +638,27 @@ class marantzdenon extends eqLogic {
 		if (isset($infos['InputFuncSelect'])) {
 			//$tmpFuncVal = $infos['InputFuncSelect'];
 			$tmpFuncVal = self::INPUT_TYPE[ $infos['InputFuncSelect'] ];
+			$tmpFuncValRaw = $infos['InputFuncSelect'];
 			$tmpFuncInfoVal = $tmpFuncVal;
 			$tmpNetInfo = '';
+			$tmpNetVal = '';
 			if ( $infos['InputFuncSelect'] == 'NET' ) {
 				$netdata = $this->getAmpInfoNet();
 				$tmpNetVal = $netdata['NETINPUT'];
 				$tmpNetInfo = ($netdata['NETINFO']=='')?'':(' (' .$netdata['NETINFO']. ')');
 				$tmpFuncVal  = self::INPUT_TYPE[ $tmpNetVal ];
+				$tmpFuncValRaw = $tmpNetVal;
 				$tmpFuncInfoVal = ($tmpFuncVal=='') ? $tmpNetVal : $tmpFuncVal . $tmpNetInfo;
 			}
-			$this->checkAndUpdateCmd('input', ($tmpFuncVal=='') ? $infos['InputFuncSelect'] : $tmpFuncVal );
+			//$this->checkAndUpdateCmd('input', ($tmpFuncVal=='') ? $infos['InputFuncSelect'] : $tmpFuncVal );
+			$this->checkAndUpdateCmd('input', $tmpFuncValRaw);
 			$this->checkAndUpdateCmd('input_info', $tmpFuncInfoVal);
 			$this->checkAndUpdateCmd('input_netinfo', $tmpNetInfo);
 
 		}
 		if (isset($infos['MasterVolume'])) {
-			$this->checkAndUpdateCmd('volume', $infos['MasterVolume']+79);
+			$vol = $infos['MasterVolume'];
+			$this->checkAndUpdateCmd('volume', ( ($vol<0)? $vol+79 : $vol ));
 		}
 		if (isset($infos['Mute'])) {
 			$this->checkAndUpdateCmd('mute_state', ($infos['Mute']=='off')?0:1 );

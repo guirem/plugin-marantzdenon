@@ -16,9 +16,10 @@ Plugin pour commander les amplificateurs Marantz ou Denon récents. Il s'agit d'
 ![Marantz CR511](../assets/ampli2.png "Marantz CR511")
 
 **Modèle compatibles**
-- Marantz M-CR511 & Marantz M-CR611 (testé)
-- Denon AVR X 3000/4000 (en théorie)
-- Très probablement Denon CEOL Nx
+- Marantz M-CR511 & Marantz M-CR611
+- Marantz NR1606 ou similaire
+- Denon AVR X2000/3000/4000
+- Denon CEOL Nx (à confirmer)
 - Probablement d'autres modèles Denon/Marantz
 
 
