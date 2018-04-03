@@ -48,32 +48,20 @@ Plugins puis multimedia.
 ### Onglet Equipement:
 
 -   **Nom de l’équipement Denon** : nom de votre équipement,
-
 -   **Objet parent** : indique l’objet parent auquel appartient
     l’équipement,
-
 -   **Catégorie** : les catégories de l’équipement (il peut appartenir à
     plusieurs catégories),
-
 -   **Activer** : permet de rendre votre équipement actif,
-
 -   **Visible** : rend votre équipement visible sur le dashboard,
-
 -   **IP** : IP de l’amplificateur,
-
 -   **Info Modèle** : La référence du modèle retourné par l'équipement (non modifiable),
-
--   **Type de Modèle** : Créer les commandes en fonction de ce choix,
-
+-   **Type de Modèle** : création des commandes en fonction de ce choix,
 -   **Zone** : zone à contrôler (principale ou zone 2/3),
-
--   **Nombre de favoris** : commandes de favoris a créer,
-
--   **Volume Maximum** : Volume maximum qu'il est possible de commander via le plugin,
-
--   **Volume par défaut** : Volume par défaut lors de l'allumage via le plugin,
-
--   **Peut être éteint** : Ne génère pas d'erreurs si l'équipement est débranché.
+-   **Nombre de favoris** : commandes d'accès aux favoris à créer,
+-   **Volume Maximum** : volume maximum qu'il est possible de commander via le plugin (0-98),
+-   **Volume par défaut** : volume par défaut lors de l'allumage via le plugin (0 pour désactiver),
+-   **Peut être éteint** : ne génère pas d'erreurs si l'équipement est débranché.
 
 
 ### Onglet Commandes
@@ -82,9 +70,14 @@ Les commandes de bases sont générées automatiquement en fonction du modèle d
 votre amplificateur. Si le modèle n'est pas connu il prendra une configuration la plus étendue.
 Il est possible de les renommer, tester et configurer les paramêtres d'apparence.
 
-Vous pouvez également ajouter de nouvelles commandes.
+Vous pouvez également ajouter de nouvelles commandes (voir section ci-dessous).
 
 ![Alt text](../assets/command.png "Custom command")
+
+> **Notes**
+>
+> - La commande de volume se fait sur des valeurs entre 0 et 98 et non pas sur des valeurs en db. 
+> - La commande info nommé 'Accessible' (caché par défaut) donne l'état de disponibilité par le plugin (si ampli débranché ou IP érronée).
 
 
 Commandes personnalisées 
@@ -92,19 +85,20 @@ Commandes personnalisées
 
 Il est possible d'ajouter des commandes personnalisées. La spécification en contient beaucoup et est disponible <a target="_blank" href="../assets/AVRX4000_PROTOCOL(10_3_0)_V03.pdf">en local</a> ou <a target="_blank" href="https://usa.denon.com/us/product/hometheater/receivers/avrx4000?docname=AVRX4000_PROTOCOL(10%203%200)_V03.pdf">en ligne</a>.
 
+Extrait du document :
 ![Specification Extract](../assets/spec.png "Specification Extract")
 
 Pour cela la commande action devra avoir comme valeur ce qui se trouve dans le tableau des commandes disponibles de la doc.
 
-Il est également possible de créer des séquences en séparant les commandes par ',' (une valeur numérique marque une pause en seconde).
+Il est également possible de créer des séquences en séparant les commandes par ',' (une valeur numérique marque une pause en secondes).
 
 Exemples :
 
-- **Z207** : Volume de la zone 2 au niveau 7.
+- *Z207* : Volume de la zone 2 au niveau 7.
 
-- **PWON,3,mute_on,4,MV04,SIIRADIO** : Allumer, attendre 3 secondes, mute, attendre 4 secondes, Volume à 4, mettre la Radio
+- *PWON,3,mute_on,4,MV04,SIIRADIO* : allumer l'ampli, attendre 3 secondes, mute, attendre 4 secondes, volume à 4, mettre la Radio
 
-- **SIIRADIO,3,SLEEP060** : Mettre la Radio, attendre 3 secondes, Veille dans 1 heure.
+- *SIIRADIO,3,SLEEP060* : mettre la Radio, attendre 3 secondes, veille dans 1 heure.
 
 
 
