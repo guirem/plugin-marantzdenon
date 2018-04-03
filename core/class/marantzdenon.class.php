@@ -389,8 +389,7 @@ class marantzdenon extends eqLogic {
 				'IRP' => 'Internet Radio',
 				'CD' => 'CD',
 			),
-			'NoInput' => array(
-			),
+			'NoInput' => array(),
 			'Marantz_M-CR511' => array(	// Marantz  M-CR611
 				'USB/IPOD' => 'iPod/USB',
 				'REARUSB' => 'USB Arrière',

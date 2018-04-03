@@ -91,7 +91,7 @@ Il est possible d'ajouter des commandes personnalisées. La spécification en co
 Extrait du document :
 ![Specification Extract](../assets/spec.png "Specification Extract")
 
-Pour cela la commande action devra avoir comme valeur ce qui se trouve dans le tableau des commandes disponibles de la doc (a partir de la page 8).
+Pour cela la commande action devra avoir comme valeur ce qui se trouve dans le tableau des commandes disponibles de la doc (a partir de la page 8). 
 
 Il est également possible de créer des séquences en séparant les commandes par ',' (une valeur numérique marque une pause en secondes).
 
