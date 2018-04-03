@@ -25,10 +25,6 @@ class marantzdenon extends eqLogic {
 	const MAX_VOLUME = 98;//98;//19;
 	const MIN_VOLUME = 0;//-79;
 	
-	//const URL_GET = '/goform/formMainZone_MainZoneXml.xml';
-	//const URL_GET2 = '/goform/formMainZone_MainZoneXmlStatusLite.xml';
-	//const URL_GETNETPLAYING = '/goform/formNetAudio_StatusXml.xml';
-	
 	const INPUT_TYPE = array(
 				'NET' => 'Network',
 				'USB/IPOD' => 'iPod/USB',
@@ -351,7 +347,7 @@ class marantzdenon extends eqLogic {
 		}
 		
 		$convert = array(	// predefined models
-			'0'  => '', 
+			'0'  => 'NoInput', 
 			'30' => 'Marantz_M-CR511',
 			'3X' => 'Marantz_M-CR611',
 			'3'  => 'Denon_Tuner', 
@@ -392,6 +388,8 @@ class marantzdenon extends eqLogic {
 				'BT' => 'Bluetooth',
 				'IRP' => 'Internet Radio',
 				'CD' => 'CD',
+			),
+			'NoInput' => array(
 			),
 			'Marantz_M-CR511' => array(	// Marantz  M-CR611
 				'USB/IPOD' => 'iPod/USB',
