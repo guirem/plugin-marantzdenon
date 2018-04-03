@@ -16,10 +16,10 @@ Plugin pour commander les amplificateurs Marantz ou Denon récents. Il s'agit d'
 ![Marantz CR511](../assets/ampli2.png "Marantz CR511")
 
 **Modèle compatibles**
-- Marantz M-CR511 & Marantz M-CR611
-- Denon AVR X 3000/4000 (non testé)
+- Marantz M-CR511 & Marantz M-CR611 (testé)
+- Denon AVR X 3000/4000 (en théorie)
 - Très probablement Denon CEOL Nx
-- Probablement d'autres modèles Denon/Marantz (ex: CEOL Nx)
+- Probablement d'autres modèles Denon/Marantz
 
 
 Pour les amplis plus anciens, le plugin original denonavr fonctionne toujours.
@@ -45,6 +45,9 @@ Configuration des équipements
 La configuration des équipements Marantz/Denon récents est accessible à partir du menu
 Plugins puis multimedia.
 
+Vérifier que l'ampli est bien branché, visible sur le réseau et que vous connaissez l'IP avant d'ajouter un équipement 
+(vous pouvez vérifier facilement en testant que la page http://{adresse IP}/goform/formMainZone_MainZoneXml.xml renvoie quelque chose).
+
 ### Onglet Equipement:
 
 -   **Nom de l’équipement Denon** : nom de votre équipement,
@@ -58,7 +61,7 @@ Plugins puis multimedia.
 -   **Info Modèle** : La référence du modèle retourné par l'équipement (non modifiable),
 -   **Type de Modèle** : création des commandes en fonction de ce choix,
 -   **Zone** : zone à contrôler (principale ou zone 2/3),
--   **Nombre de favoris** : commandes d'accès aux favoris à créer,
+-   **Nombre de favoris** : commandes d'accès aux favoris à créer (max 4),
 -   **Volume Maximum** : volume maximum qu'il est possible de commander via le plugin (0-98),
 -   **Volume par défaut** : volume par défaut lors de l'allumage via le plugin (0 pour désactiver),
 -   **Peut être éteint** : ne génère pas d'erreurs si l'équipement est débranché.
@@ -88,7 +91,7 @@ Il est possible d'ajouter des commandes personnalisées. La spécification en co
 Extrait du document :
 ![Specification Extract](../assets/spec.png "Specification Extract")
 
-Pour cela la commande action devra avoir comme valeur ce qui se trouve dans le tableau des commandes disponibles de la doc.
+Pour cela la commande action devra avoir comme valeur ce qui se trouve dans le tableau des commandes disponibles de la doc (a partir de la page 8).
 
 Il est également possible de créer des séquences en séparant les commandes par ',' (une valeur numérique marque une pause en secondes).
 
@@ -98,8 +101,10 @@ Exemples :
 
 - *PWON,3,mute_on,4,MV04,SIIRADIO* : allumer l'ampli, attendre 3 secondes, mute, attendre 4 secondes, volume à 4, mettre la Radio
 
-- *SIIRADIO,3,SLEEP060* : mettre la Radio, attendre 3 secondes, veille dans 1 heure.
+- *SIIRADIO,3,SLEEP060* : mettre la Radio, attendre 3 secondes, mise en veille dans 1 heure.
 
 
+## Changelog
 
+[Voir la page dédiée](changelog.md).
 
