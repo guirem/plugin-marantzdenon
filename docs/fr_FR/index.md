@@ -6,15 +6,25 @@ Vous avez aussi un retour d’état
 indiquant si la zone est active, le niveau de volume, l’entrée
 selectionnée et le type audio.
 
-> **Fonctionne avec**
-> - Marantz M-CR511 & Marantz M-CR611
->
-> - Denon AVR X 3000/4000 (non testé)
->
-> - Autres modèles Denon/Marantz non confirmé
->
+**Modèle compatibles**
+- Marantz M-CR511 & Marantz M-CR611
+
+- Denon AVR X 3000/4000 (non testé)
+
+- Probablement d'autres modèles Denon/Marantz (ex: CEOL Nx)
+
 
 Pour les amplis plus anciens, le plugin original denonavr fonctionne toujours.
+
+
+> **Note**
+>
+> Le retour du volume n'a pas l'air de fonctionner sur tous les modèles (bug firmware)
+
+Dashboard
+=======================
+
+![Visuel du dashboard](../assets/dashboard.png "Visuel du dashboard")
 
 Configuration du plugin 
 =======================
@@ -29,7 +39,7 @@ Plugins puis multimedia.
 
 Vous retrouvez ici toute la configuration de votre équipement :
 
--   **Nom de l’équipement Denon** : nom de votre équipement Denon,
+-   **Nom de l’équipement Denon** : nom de votre équipement,
 
 -   **Objet parent** : indique l’objet parent auquel appartient
     l’équipement,
@@ -41,13 +51,22 @@ Vous retrouvez ici toute la configuration de votre équipement :
 
 -   **Visible** : rend votre équipement visible sur le dashboard,
 
--   **IP** : IP de l’amplificateur denon
+-   **IP** : IP de l’amplificateur,
 
--   **Info Modèle** : La référence du modèle retourné par l'équipement (non modifiable)
+-   **Info Modèle** : La référence du modèle retourné par l'équipement (non modifiable),
 
--   **Type de Modèle** : Créer les commandes en fonction de ce choix
+-   **Type de Modèle** : Créer les commandes en fonction de ce choix,
 
--   **Zone** : zone à contrôler (principale ou zone 2/3)
+-   **Zone** : zone à contrôler (principale ou zone 2/3),
+
+-   **Nombre de favoris** : commandes de favoris a créer,
+
+-   **Volume Maximum** : Volume maximum qu'il est possible de commander via le plugin,
+
+-   **Volume par défaut** : Volume par défaut lors de l'allumage via le plugin,
+
+-   **Peut être éteint** : Ne génère pas d'erreurs si l'équipement est débranché.
+
 
 En dessous vous retrouvez la liste des commandes :
 
@@ -64,23 +83,32 @@ En dessous vous retrouvez la liste des commandes :
 -   **Action** : permet d’afficher la fenêtre de
     configuration avancée de la commande et tester la commande,
 
-
-Il est possible d'ajouter des commandes supplémentaires en fonction des besoins. La spécification en contient beaucoup et est disponible <a target="_blank" href="../assets/AVRX4000_PROTOCOL(10_3_0)_V03.pdf">en local</a> ou <a target="_blank" href="https://usa.denon.com/us/product/hometheater/receivers/avrx4000?docname=AVRX4000_PROTOCOL(10%203%200)_V03.pdf">en ligne</a>.
-
-Pour cela la commande action devra avoir comme valeur ce qui se trouve dans le tableau des commandes disponibles de la doc (sans le <CR>).
-Il est également possible de créer des séquences en séparant les commandes par ',' (une valeur numérique marque une pause en seconde).
-
-Exemple : PWON,3,mute_on,4,MV04,SIIRADIO => Allumer, attendre 3 secondes, mute, attendre 4 secondes, Volume à 4, mettre la Radio
-
-![Alt text](../assets/command.png "Custom command")
-
-Autre exemple : SIIRADIO,3,SLEEP060 => Mettre la Radio, attendre 3 secondes, Veille dans 1 heures
-
-
 > **Note**
 >
 > Les commandes de bases sont générées automatiquement en fonction du modèle de
 > votre amplificateur. Si le modèle n'est pas connu il prendra une configuration la plus étendue.
 > 
 > Le retour du volume n'a pas l'air de fonctionner sur tous les modèles (bug)
+
+Commandes personalisées 
+=============================
+
+Il est possible d'ajouter des commandes personalisées. La spécification en contient beaucoup et est disponible <a target="_blank" href="../assets/AVRX4000_PROTOCOL(10_3_0)_V03.pdf">en local</a> ou <a target="_blank" href="https://usa.denon.com/us/product/hometheater/receivers/avrx4000?docname=AVRX4000_PROTOCOL(10%203%200)_V03.pdf">en ligne</a>.
+
+Pour cela la commande action devra avoir comme valeur ce qui se trouve dans le tableau des commandes disponibles de la doc.
+
+Il est également possible de créer des séquences en séparant les commandes par ',' (une valeur numérique marque une pause en seconde).
+
+![Alt text](../assets/command.png "Custom command")
+
+Exemples 
+
+- **Z207** : Volume de la zone 2 au niveau 7.
+
+- **PWON,3,mute_on,4,MV04,SIIRADIO** : Allumer, attendre 3 secondes, mute, attendre 4 secondes, Volume à 4, mettre la Radio
+
+- **SIIRADIO,3,SLEEP060** : Mettre la Radio, attendre 3 secondes, Veille dans 1 heure.
+
+
+
 
