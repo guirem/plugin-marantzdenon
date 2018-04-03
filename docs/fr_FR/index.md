@@ -3,22 +3,22 @@ Description du plugin
 
 Plugin pour commander les amplificateurs Marantz ou Denon récents. Il s'agit d'une reprise du plugin denonavr mais mis à jour pour les amplis plus récents.
 
-Vous pourrez contrôler les entrées à utiliser, sortie de veille, mettre en veille
-l’amplificateur et contrôler le volume, activer le mode sleep. 
-Vous avez aussi un retour d’état
-indiquant si la zone est active, le niveau de volume, l’entrée
-selectionnée et le type audio.
+**Fonctionnalités :**
+
+- Allumer / éteindre (veille),
+- Changer d'entrée,
+- Contrôler le volume et activer/désactiver mute, 
+- Veille programmable (sleep), 
+- Retour d'état sur les principales fonctionnalités
+- Possibilité d'ajouter des commandes personnalisées
 
 ![Denon AVR X4000](../assets/ampli1.png "Denon AVR X4000")
 ![Marantz CR511](../assets/ampli2.png "Marantz CR511")
 
 **Modèle compatibles**
 - Marantz M-CR511 & Marantz M-CR611
-
 - Denon AVR X 3000/4000 (non testé)
-
 - Très probablement Denon CEOL Nx
-
 - Probablement d'autres modèles Denon/Marantz (ex: CEOL Nx)
 
 
@@ -87,10 +87,10 @@ Vous pouvez également ajouter de nouvelles commandes.
 ![Alt text](../assets/command.png "Custom command")
 
 
-Commandes personalisées 
+Commandes personnalisées 
 =============================
 
-Il est possible d'ajouter des commandes personalisées. La spécification en contient beaucoup et est disponible <a target="_blank" href="../assets/AVRX4000_PROTOCOL(10_3_0)_V03.pdf">en local</a> ou <a target="_blank" href="https://usa.denon.com/us/product/hometheater/receivers/avrx4000?docname=AVRX4000_PROTOCOL(10%203%200)_V03.pdf">en ligne</a>.
+Il est possible d'ajouter des commandes personnalisées. La spécification en contient beaucoup et est disponible <a target="_blank" href="../assets/AVRX4000_PROTOCOL(10_3_0)_V03.pdf">en local</a> ou <a target="_blank" href="https://usa.denon.com/us/product/hometheater/receivers/avrx4000?docname=AVRX4000_PROTOCOL(10%203%200)_V03.pdf">en ligne</a>.
 
 ![Specification Extract](../assets/spec.png "Specification Extract")
 
@@ -98,14 +98,14 @@ Pour cela la commande action devra avoir comme valeur ce qui se trouve dans le t
 
 Il est également possible de créer des séquences en séparant les commandes par ',' (une valeur numérique marque une pause en seconde).
 
-Exemples 
-```
+Exemples :
+
 - **Z207** : Volume de la zone 2 au niveau 7.
 
 - **PWON,3,mute_on,4,MV04,SIIRADIO** : Allumer, attendre 3 secondes, mute, attendre 4 secondes, Volume à 4, mettre la Radio
 
 - **SIIRADIO,3,SLEEP060** : Mettre la Radio, attendre 3 secondes, Veille dans 1 heure.
-```
+
 
 
 
