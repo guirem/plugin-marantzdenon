@@ -65,8 +65,16 @@ En dessous vous retrouvez la liste des commandes :
     configuration avancée de la commande et tester la commande,
 
 
-Il est possible d'ajouter des commandes supplémentaires en fonction des besoins. Les spécification en contient beaucoup est est disponible <a target="_blank" href="../assets/AVRX4000_PROTOCOL(10_3_0)_V03.pdf">en local</a> ou <a target="_blank" href="https://usa.denon.com/us/product/hometheater/receivers/avrx4000?docname=AVRX4000_PROTOCOL(10%203%200)_V03.pdf">en ligne</a>.
-Pour cela la commande action devra avoir comme valeur ce qui se trouve dans le tableau des commandes disponibles de la doc (sans le <CR>). 
+Il est possible d'ajouter des commandes supplémentaires en fonction des besoins. La spécification en contient beaucoup et est disponible <a target="_blank" href="../assets/AVRX4000_PROTOCOL(10_3_0)_V03.pdf">en local</a> ou <a target="_blank" href="https://usa.denon.com/us/product/hometheater/receivers/avrx4000?docname=AVRX4000_PROTOCOL(10%203%200)_V03.pdf">en ligne</a>.
+
+Pour cela la commande action devra avoir comme valeur ce qui se trouve dans le tableau des commandes disponibles de la doc (sans le <CR>).
+Il est également possible de créer des séquences en séparant les commandes par ',' (une valeur numérique marque une pause en seconde).
+
+Exemple : PWON,3,mute_on,4,MV04,SIIRADIO => Allumer, attendre 3 secondes, mute, attendre 4 secondes, Volume à 4, mettre la Radio
+
+![Alt text](../assets/command.png "Custom command")
+
+Autre exemple : SIIRADIO,3,SLEEP060 => Mettre la Radio, attendre 3 secondes, Veille dans 1 heures
 
 
 > **Note**

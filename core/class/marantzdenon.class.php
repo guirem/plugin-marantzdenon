@@ -22,7 +22,7 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class marantzdenon extends eqLogic {
 	/*     * *************************Attributs****************************** */
 
-	const MAX_VOLUME = 30;//98;//19;
+	const MAX_VOLUME = 98;//98;//19;
 	const MIN_VOLUME = 0;//-79;
 	
 	//const URL_GET = '/goform/formMainZone_MainZoneXml.xml';
@@ -84,6 +84,19 @@ class marantzdenon extends eqLogic {
 	}
 
 	public function postSave() {
+		
+		$cmd = $this->getCmd(null, 'reachable');
+		if (!is_object($cmd)) {
+			$cmd = new marantzdenonCmd();
+			$cmd->setLogicalId('reachable');
+			$cmd->setIsVisible(0);
+			$cmd->setName(__('Accessible', __FILE__));
+		}
+		$cmd->setType('info');
+		$cmd->setSubType('binary');
+		$cmd->setEqLogic_id($this->getId());
+		$cmd->setDisplay('generic_type', 'ENERGY_STATE');
+		$cmd->save();
 		
 		$cmd = $this->getCmd(null, 'power_state');
 		if (!is_object($cmd)) {
@@ -192,7 +205,11 @@ class marantzdenon extends eqLogic {
 		$cmd->setType('action');
 		$cmd->setSubType('slider');
 		$cmd->setConfiguration('minValue', self::MIN_VOLUME);
-		$cmd->setConfiguration('maxValue', self::MAX_VOLUME);
+		if ($this->getConfiguration('volumemax')>=0) {
+			$cmd->setConfiguration('maxValue', $this->getConfiguration('volumemax'));
+		} else {
+			$cmd->setConfiguration('maxValue', self::MAX_VOLUME);
+		}
 		$cmd->setValue($volume_id);
 		$cmd->setEqLogic_id($this->getId());
 		$cmd->save();
@@ -394,43 +411,55 @@ class marantzdenon extends eqLogic {
 		if ($this->getConfiguration('ip') != '') {
 			$nextOrder = 20;
 			$infos = $this->getAmpInfoAll();
-			$model = $infos['ModelId'];
 			
-			$modelInfo = (($infos['FriendlyName']=='')?'Inconnu':$infos['FriendlyName']) . ' (id=' .$model. ')';
+			if ($infos!=false) {	// if reachable
+				$model = $infos['ModelId'];
 			
-			if (isset($convert[$model])) {
-				$model = $convert[$model];
-			}
-
-			if (isset($inputModel[$model])) {
-				$modelInputArray = $inputModel[$model];
-			}
-			if ($this->getConfiguration('modelType') != 'auto') {
-				$modelInputArray = $inputModel[$this->getConfiguration('modelType')];
-			}
-			if ( $this->getConfiguration('modelType') == 'auto' && !isset($inputModel[$model]) ) {
-				$modelInputArray = $inputModel['BasicHomeCinema'];
-			}
-			
-			foreach ($modelInputArray as $key => $value) {
-				$cmd = $this->getCmd(null, 'si_'.$key);
-				if (!is_object($cmd)) {
-					$cmd = new marantzdenonCmd();
-					$cmd->setLogicalId('si_'.$key);
-					$cmd->setName($value);
-					$cmd->setIsVisible(1);
+				$modelInfo = (($infos['FriendlyName']=='')?'Inconnu':$infos['FriendlyName']) . ' (id=' .$model. ')';
+				
+				if (isset($convert[$model])) {
+					$model = $convert[$model];
 				}
-				$cmd->setType('action');
-				$cmd->setSubType('other');
-				$cmd->setEventOnly(1);
-				$cmd->setEqLogic_id($this->getId());
-				$cmd->setOrder($nextOrder++);
-				$cmd->save();
-			}
+				if (isset($inputModel[$model])) {
+					$modelInputArray = $inputModel[$model];
+				}
+				if ($this->getConfiguration('modelType') != 'auto') {
+					$modelInputArray = $inputModel[$this->getConfiguration('modelType')];
+				}
+				if ( $this->getConfiguration('modelType') == 'auto' && !isset($inputModel[$model]) ) {
+					$modelInputArray = $inputModel['BasicHomeCinema'];
+				}
+				// clean old si_ cmd
+				foreach (self::INPUT_TYPE as $key => $value) {
+					if ( !array_key_exists($key, $modelInputArray) ) {
+						$cmd = $this->getCmd(null, 'si_' . $key);
+						if (is_object($cmd)) {
+							$cmd->remove();
+						}
+					}
+				}
 			
-			if ($this->getConfiguration('modelInfo') != $modelInfo) {
-				$this->setConfiguration('modelInfo', $modelInfo);
-				$this->save();
+				// create new
+				foreach ($modelInputArray as $key => $value) {
+					$cmd = $this->getCmd(null, 'si_'.$key);
+					if (!is_object($cmd)) {
+						$cmd = new marantzdenonCmd();
+						$cmd->setLogicalId('si_'.$key);
+						$cmd->setName($value);
+						$cmd->setIsVisible(1);
+					}
+					$cmd->setType('action');
+					$cmd->setSubType('other');
+					$cmd->setEventOnly(1);
+					$cmd->setEqLogic_id($this->getId());
+					$cmd->setOrder($nextOrder++);
+					$cmd->save();
+				}
+				
+				if ($this->getConfiguration('modelInfo') != $modelInfo) {
+					$this->setConfiguration('modelInfo', $modelInfo);
+					$this->save();
+				}
 			}
 			$this->updateInfo();
 		}
@@ -452,7 +481,7 @@ class marantzdenon extends eqLogic {
 			$result = trim($request_http->exec());
 		} catch (Exception $e) {
 			if ($this->getConfiguration('canBeShutdown') == 1) {
-				return;
+				return false;
 			} else {
 				throw new $e;
 			}
@@ -480,7 +509,7 @@ class marantzdenon extends eqLogic {
 		}
 		$request_http = new com_http('http://' . $this->getConfiguration('ip') . '/goform/form'.$zone.'_'.$zone.'XmlStatusLite.xml');
 		try {
-			$result = trim($request_http->exec());
+			$result = trim($request_http->exec(5));
 		} catch (Exception $e) {
 			if ($this->getConfiguration('canBeShutdown') == 1) {
 				return;
@@ -514,7 +543,7 @@ class marantzdenon extends eqLogic {
 		}
 		$request_http = new com_http('http://' . $this->getConfiguration('ip') . '/goform/formNetAudio_StatusXml.xml' . $zone);
 		try {
-			$result = trim($request_http->exec());
+			$result = trim($request_http->exec(5));
 		} catch (Exception $e) {
 			if ($this->getConfiguration('canBeShutdown') == 1) {
 				return;
@@ -549,11 +578,18 @@ class marantzdenon extends eqLogic {
 		try {
 			$infos = $this->getAmpInfo();
 		} catch (Exception $e) {
+			$this->checkAndUpdateCmd('reachable', 0);
+			$this->checkAndUpdateCmd('power_state', 0);
+			$this->checkAndUpdateCmd('input_info', 'Non accessible');
 			return;
 		}
 		if (!is_array($infos)) {
+			$this->checkAndUpdateCmd('reachable', 0);
+			$this->checkAndUpdateCmd('power_state', 0);
+			$this->checkAndUpdateCmd('input_info', 'Non accessible');
 			return;
 		}
+		$this->checkAndUpdateCmd('reachable', 1);
 		if (isset($infos['Power'])) {
 			$this->checkAndUpdateCmd('power_state', ($infos['Power'] == 'ON') ? 1 : 0);
 			
@@ -624,111 +660,120 @@ class marantzdenonCmd extends cmd {
 			$zone = 'Z'.$eqLogic->getConfiguration('zone');
 		}
 		
-		$cmd = '';
-		$value = '';
-		$form = '/goform/';
-		$isCustom = false;
 		$type = $this->getType();
-		$values = explode(',', $this->getLogicalId());
-		
-		if ( count($values)==1 && strpos($values[0], ':')==false ) {
-			$cmd = trim($this->getLogicalId());
-			$value = $cmd;
+		$cmds = $this->getLogicalId();
+		switch ($this->getSubType()) {
+			case 'slider':
+				$cmds = trim(str_replace('#slider#', $_options['slider'], $cmds));
+				break;
+			case 'select':
+				$cmds = trim(str_replace('#listValue#', $_options['select'], $cmds));
+				break;
+			case 'message':
+				$cmds = trim(str_replace('#message#', $_options['message'], $cmds));
+				$cmds = trim(str_replace('#title#', $_options['title'], $cmds));
+				break;
 		}
-		else {
-			foreach ($values as $value) {
-				$value = explode(':', $value);
-				if (count($value) == 2) {
-					switch ($this->getSubType()) {
-						case 'slider':
-							$data[trim($value[0])] = trim(str_replace('#slider#', $_options['slider'], $value[1]));
-							break;
-						case 'color':
-							$data[trim($value[0])] = str_replace('#','',trim(str_replace('#color#', $_options['color'], $value[1])));
-							break;
-						case 'select':
-							$data[trim($value[0])] = trim(str_replace('#listValue#', $_options['select'], $value[1]));
-							break;
-						case 'message':
-							$data[trim($value[0])] = trim(str_replace('#message#', $_options['message'], $value[1]));
-							$data[trim($value[0])] = trim(str_replace('#title#', $_options['title'], $data[trim($value[0])]));
-							break;
-						default:
-							$data[trim($value[0])] = trim($value[1]);
+		
+		$cmds = explode(',', $cmds);
+		
+		$index=0;
+		foreach ($cmds as $cmd) {
+			$cmd = trim($cmd);
+			$index++;
+				
+			if ($type == 'action') {
+				if ($cmd == 'on') {
+					$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.(($zone=='')?'PWON':$zone.'ON'));
+					$ret = $this->http_exec_wrapper($request_http, 10);
+					if ($ret && $eqLogic->getConfiguration('volumedefault')>0) {
+						sleep(8);
+						$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.(($zone=='')?'MV':$zone) .str_pad( $eqLogic->getConfiguration('volumedefault'), 2, "0", STR_PAD_LEFT ));
+						$this->http_exec_wrapper($request_http, 2);
 					}
+				} else if ($cmd == 'off') {
+					if ($eqLogic->getConfiguration('volumedefault')>0) {
+						$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.(($zone=='')?'MV':$zone) .str_pad( $eqLogic->getConfiguration('volumedefault'), 2, "0", STR_PAD_LEFT ));
+						$this->http_exec_wrapper($request_http, 2);
+						sleep(1);
+					}
+					$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.(($zone=='')?'PWSTANDBY':$zone.'OFF'));
+					$ret = $this->http_exec_wrapper($request_http, 10);
+					if ($ret) sleep(5);
+				} else if ($cmd == 'volume_set') {
+					$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.(($zone=='')?'MV':$zone) .str_pad( min($_options['slider'],$eqLogic->getConfiguration('volumemax')), 2, "0", STR_PAD_LEFT ));
+					$request_http->exec();
+				} else if ($cmd == 'volume_up') {
+					$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.(($zone=='')?'MV':$zone).'UP');
+					$request_http->exec();
+				} else if ($cmd == 'volume_down') {
+					$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.(($zone=='')?'MV':$zone).'DOWN');
+					$request_http->exec();
+				} else if ($cmd == 'mute_on') {
+					$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.$zone.'MUON');
+					$request_http->exec();
+				} else if ($cmd == 'mute_off') {
+					$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.$zone.'MUOFF');
+					$request_http->exec();
+				} else if ( strpos($cmd, 'fav_') === 0) {	// is a fav call
+					$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_CALLFAVORITE . '?0' . substr($cmd, -1) );
+					$request_http->exec();
+				} else if ($cmd == 'sleep') {
+					$sleepval = str_pad($_options['slider'], 3, "0", STR_PAD_LEFT );
+					if ($sleepval=='000') {
+						$sleepval='OFF';
+					}
+					$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.$zone.'SLP'.$sleepval);
+					$request_http->exec();
+				} else if ( strpos($cmd, 'si_') === 0) {	// is a input change call
+					$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'. (($zone=='')?'SI':$zone) . str_replace('si_','',$cmd) );
+					$request_http->exec();
+				} else if ( is_numeric($cmd) ) {
+					sleep($cmd);
+				} else if ($cmd == 'refresh' || $cmd == 'reachable') {
+					// do nothing
+				} else {	// other commands
+					$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?' . strtoupper($cmd) );
+					$request_http->exec();
 				}
-			}
-			$cmd = trim($data['cmd']);
-			$value = trim($data['value']);
-			if (isset($data['form'])) {
-				$form = $data['form'];
-			}
-			$isCustom = true;
-		}
-		
-		
-		if ($type == 'action') {
-			if ($cmd == 'on') {
-				$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.(($zone=='')?'PWON':$zone.'ON'));
-				$request_http->exec(10);
-			} else if ($cmd == 'off') {
-				$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.(($zone=='')?'PWSTANDBY':$zone.'OFF'));
-				$request_http->exec(10);
-			} else if ($cmd == 'volume_set') {
-				$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.(($zone=='')?'MV':$zone) .str_pad($_options['slider'], 2, "0", STR_PAD_LEFT ));
-				$request_http->exec();
-			} else if ($cmd == 'volume_up') {
-				$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.(($zone=='')?'MV':$zone).'UP');
-				$request_http->exec();
-			} else if ($cmd == 'volume_down') {
-				$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.(($zone=='')?'MV':$zone).'DOWN');
-				$request_http->exec();
-			} else if ($cmd == 'mute_on') {
-				$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.$zone.'MUON');
-				$request_http->exec();
-			} else if ($cmd == 'mute_off') {
-				$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.$zone.'MUOFF');
-				$request_http->exec();
-			} else if ( strpos($cmd, 'fav_') === 0) {	// is a fav call
-				$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_CALLFAVORITE . '?0' . substr($cmd, -1) );
-				$request_http->exec();
-			} else if ($cmd == 'sleep') {
-				$sleepval = str_pad($_options['slider'], 3, "0", STR_PAD_LEFT );
-				if ($sleepval=='000') {
-					$sleepval='OFF';
-				}
-				$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.$zone.'SLP'.$sleepval);
-				$request_http->exec();
-			} else if ( strpos($cmd, 'si_') === 0) {	// is a input change call
-				$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'. (($zone=='')?'SI':$zone) . str_replace('si_','',$cmd) );
-				$request_http->exec();
-			}
-			else {	// other commands
-				$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?' . $cmd );
-				$request_http->exec();
-			}
-			sleep(1);
-			$eqLogic->updateInfo();
-		}
-		else {		// if 'info'
-			switch ($cmd) {
-				case "power_state":
-				case "input":
-				case "input_info":
-				case "input_netinfo":
-				case "volume":
-				case "mute_state":
+				if ( $index==count($cmds) ) {	// update on last cmd
+					sleep(1);
 					$eqLogic->updateInfo();
-					break;
-				default:
-					$eqLogic->updateCustomInfo($this->getLogicalId(), $value);
-					break;
+				}
+			}
+			else {		// if 'info'
+				$eqLogic->updateInfo();
+				/*
+				switch ($cmd) {
+					case "power_state":
+					case "input":
+					case "input_info":
+					case "input_netinfo":
+					case "volume":
+					case "mute_state":
+						$eqLogic->updateInfo();
+						break;
+					default:
+						$eqLogic->updateCustomInfo($this->getLogicalId(), $value);
+						break;
+				}
+				*/
 			}
 		}
-		
 	}
-
-	/*     * **********************Getteur Setteur*************************** */
+	
+	function http_exec_wrapper($request_http, $timeout=2) {
+		try {
+			$request_http->exec($timeout);
+			return true;
+		} catch (Exception $e) {
+			if ($this->getConfiguration('canBeShutdown') == 1) {
+				return false;
+			} else {
+				throw new $e;
+			}
+		}
+	}
 }
 
 ?>

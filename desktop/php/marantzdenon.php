@@ -130,6 +130,20 @@ foreach (object::all() as $object) {
           <input type="number" min="0" max="9" value="3" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="favoriCount" />
         </div>
       </div>
+	  <div class="form-group">
+        <label class="col-sm-3 control-label">{{Volume maximum}}</label>
+        <div class="col-sm-3">
+          <input type="number" min="0" max="98" value="30" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="volumemax" />
+        </div>
+		Valeur entre 0 et 98 (0 = désactivé)
+      </div>
+	  <div class="form-group">
+        <label class="col-sm-3 control-label">{{Volume par défaut}}</label>
+        <div class="col-sm-3">
+          <input type="number" min="0" max="98" value="7" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="volumedefault" />
+        </div>
+		Valeur entre 0 et 98 (0 = désactivé)
+      </div>
       <div class="form-group">
         <label class="col-sm-3 control-label">{{Peut être éteint}}</label>
         <div class="col-sm-3">
