@@ -351,9 +351,16 @@ class marantzdenon extends eqLogic {
 		}
 		
 		$convert = array(	// predefined models
-			'0' => '', 
+			'0'  => '', 
 			'30' => 'Marantz_M-CR511',
-			'3X' => 'Marantz_M-CR611'
+			'3X' => 'Marantz_M-CR611',
+			'3'  => 'Denon_Tuner', 
+			'8' => 'Denon_Tuner', 
+			'9' => 'Denon_Tuner', 
+			'6' => 'Denon_Phono', 
+			'11' => 'Denon_Phono', 
+			'12' => 'Denon_Phono', 
+			'13' => 'Denon_Phono'
 		);
 
 		$inputModel = array(
@@ -405,7 +412,40 @@ class marantzdenon extends eqLogic {
 				'CD' => 'CD',
 				'SERVER' => 'Media Server',
 				'REARUSB' => 'USB Arrière',
-			)
+			),
+			'Denon_Tuner' => array(
+				'SAT/CBL' => 'CBL/SAT',
+				'DVD' => 'DVD/Blu-ray',
+				'BD' => 'Blu-ray',
+				'GAME' => 'Game',
+				'AUX1' => 'AUX1',
+				'AUX2' => 'AUX2',
+				'MPLAY' => 'Media Player',
+				'USB/IPOD' => 'iPod/USB',
+				'TV' => 'TV Audio',
+				'TUNER' => 'Tuner',
+				'NETHOME' => 'Online Music',
+				'BT' => 'Bluetooth',
+				'IRP' => 'Internet Radio',
+				'CD' => 'CD',
+				'SERVER' => 'Media Server',
+			),
+			'Denon_Phono' => array(
+				'SAT/CBL' => 'CBL/SAT',
+				'DVD' => 'DVD/Blu-ray',
+				'BD' => 'Blu-ray',
+				'GAME' => 'Game',
+				'AUX1' => 'AUX1',
+				'AUX2' => 'AUX2',
+				'MPLAY' => 'Media Player',
+				'USB/IPOD' => 'iPod/USB',
+				'TV' => 'TV Audio',
+				'NETHOME' => 'Online Music',
+				'BT' => 'Bluetooth',
+				'IRP' => 'Internet Radio',
+				'CD' => 'CD',
+				'PHONO' => 'Phono',
+			),
 		);
 
 		if ($this->getConfiguration('ip') != '') {
@@ -717,7 +757,11 @@ class marantzdenonCmd extends cmd {
 					$request_http->exec();
 				} else if ( strpos($cmd, 'fav_') === 0) {	// is a fav call
 					$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_CALLFAVORITE . '?0' . substr($cmd, -1) );
-					$request_http->exec();
+					$ret = $this->http_exec_wrapper($request_http, 2);
+					if ($ret==false) {	// alternative way of calling favorites (eg: for AVR)
+						$request_http = new com_http('http://' . $eqLogic->getConfiguration('ip') . self::URL_POST . '?'.(($zone=='')?'ZM':$zone).'FAVORITE'.substr($cmd, -1));
+						$request_http->exec();
+					}
 				} else if ($cmd == 'sleep') {
 					$sleepval = str_pad($_options['slider'], 3, "0", STR_PAD_LEFT );
 					if ($sleepval=='000') {

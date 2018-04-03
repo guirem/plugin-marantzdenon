@@ -108,9 +108,10 @@ foreach (object::all() as $object) {
             <option value="auto">Auto</option>
             <option value="Marantz_M-CR511">Marantz M-CR511</option>
 			<option value="Marantz_M-CR611">Marantz M-CR611</option>
-			<option value="BasicHomeCinema">Denon AVR-X????</option>
-			<option value="BasicHomeCinema">Type Home Cinema</option>
-			<option value="BasicNotHomeCinema">Type Ampli (pas de HDMI)</option>
+			<option value="Denon_Tuner">Denon AVR (tuner)</option>
+			<option value="Denon_Phono">Denon AVR (sans tuner)</option>
+			<option value="BasicHomeCinema">Generique Home Cinema</option>
+			<option value="BasicNotHomeCinema">Generique Ampli (pas de HDMI)</option>
           </select>
         </div>
       </div>
@@ -127,7 +128,7 @@ foreach (object::all() as $object) {
 	  <div class="form-group">
         <label class="col-sm-3 control-label">{{Nombre de favoris}}</label>
         <div class="col-sm-3">
-          <input type="number" min="0" max="9" value="3" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="favoriCount" />
+          <input type="number" min="0" max="4" value="3" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="favoriCount" />
         </div>
       </div>
 	  <div class="form-group">
