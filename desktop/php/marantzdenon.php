@@ -106,7 +106,7 @@ foreach (object::all() as $object) {
         <div class="col-sm-3">
           <select type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="modelType" >
             <option value="auto">Auto</option>
-			<option value="NoInput">Ne pas créer d'entrées</option>
+			<option value="NoInput">Ne pas créer d'entrées</option> 
             <option value="Marantz_M-CR511">Marantz M-CR511</option>
 			<option value="Marantz_M-CR611">Marantz M-CR611</option>
 			<option value="Denon_Tuner">Denon AVR (tuner)</option>
