@@ -30,8 +30,8 @@
 	// check if predefined command
 	var predefCmd = ['reachable','power_state', 'input', 'input_info', 'input_netinfo', 
 					 'volume_set', 'volume', 'volume_up', 'volume_down', 
-					 'mute_state', 'mute_on', 'mute_off', 
-					 'on', 'off', 'sleep', 'refresh'
+					 'mute_state', 'mute_on', 'mute_off', 'sound_mode',
+					 'on', 'off', 'sleep', 'sleepbtn', 'refresh'
 					];
  
 	var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
@@ -52,12 +52,13 @@
 		tr += '</div>';
 		tr += '</div>';
 		tr += '</td>';
-		tr += '<td><i>Non modifiable</i></td><td><i>Non modifiable</td>';
+		tr += '<td> ' + init(_cmd.type) + '</td>';
+		tr += '<td><i>Non modifiable</i></td>';
 		tr += '<td>';
 		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span> ';
 		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span> ';
 		tr += '</td>';
-		tr += '<td><i>Non modifiable</td>';
+		tr += '<td><i>Non modifiable</i></td>';
 		tr += '<td>';
 		if (is_numeric(_cmd.id)) {
 			tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fa fa-cogs"></i></a> ';
@@ -87,7 +88,7 @@
 		tr += '<span class="type" type="' + init(_cmd.type) + '"><select style="width : 120px; margin-bottom : 3px;" class="cmdAttr form-control input-sm" data-l1key="type"><option value="action">Action</option></select></span>';
 		tr += '<span class="subType" subType="' + init(_cmd.subType) + '"></span>';
 		tr += '</td>';
-		tr += '<td><input class="cmdAttr form-control input-sm" data-l1key="logicalId" style="width : 70%; display : inline-block;" placeholder="{{Commande}}"><br/>';
+		tr += '<td><input class="cmdAttr form-control input-sm" data-l1key="logicalId" style="width : 90%; display : inline-block;" placeholder="{{Commande}}"><br/>';
 		tr += '</td>';
 		tr += '<td>';
 		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span> ';

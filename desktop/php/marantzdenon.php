@@ -91,8 +91,9 @@ foreach (object::all() as $object) {
       <div class="form-group">
         <label class="col-sm-3 control-label">{{IP}}</label>
         <div class="col-sm-3">
-          <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="ip" />
+          <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="ip" placeholder="{{X.X.X.X ou X.X.X.X:8080}}"/>
         </div>
+		L'ajout de ':8080' est uniquement nécessaire pour certain modèles (après 2016)
       </div>
 		<!---->
 	  <div class="form-group">
@@ -145,6 +146,13 @@ foreach (object::all() as $object) {
           <input type="number" min="0" max="98" value="7" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="volumedefault" />
         </div>
 		Valeur entre 0 et 98 (0 = désactivé)
+      </div>
+	  <div class="form-group">
+        <label class="col-sm-3 control-label">{{Durée Veille par défaut}}</label>
+        <div class="col-sm-3">
+          <input type="number" min="0" max="120" value="0" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="sleepdefault" />
+        </div>
+		Valeur entre 0 et 120 minutes (0 = désactivé)
       </div>
       <div class="form-group">
         <label class="col-sm-3 control-label">{{Peut être éteint}}</label>

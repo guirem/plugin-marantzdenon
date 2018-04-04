@@ -66,6 +66,11 @@ Vérifier que l'ampli est bien branché, visible sur le réseau et que vous conn
 -   **Volume par défaut** : volume par défaut lors de l'allumage via le plugin (0 pour désactiver),
 -   **Peut être éteint** : ne génère pas d'erreurs si l'équipement est débranché.
 
+> **Notes**
+>
+> Pour certain modèles, il est nécessaire d'ajouter **:8080** à l'IP dans le champ correspondant (eg: 192.168.0.120:8080). 
+> Cela concerne certains modèles récents (post 2016) notamment ceux compatibles HEOS (eg: Denon AVR-X finnissant par H)
+
 
 ### Onglet Commandes
 
