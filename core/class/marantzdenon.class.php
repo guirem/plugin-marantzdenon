@@ -29,6 +29,8 @@ class marantzdenon extends eqLogic {
 	//const URL_GET2 = '/goform/formMainZone_MainZoneXmlStatusLite.xml';
 	//const URL_GETNETPLAYING = '/goform/formNetAudio_StatusXml.xml';
 	
+	const LOGOEMPTY = '<img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" width="0" height="0" alt="">';
+	
 	const INPUT_TYPE = array(
 				'NET' => 'Network',
 				'USB/IPOD' => 'iPod/USB',
@@ -84,6 +86,19 @@ class marantzdenon extends eqLogic {
 	}
 
 	public function postSave() {
+		
+		$cmd = $this->getCmd(null, 'ip');
+		if (!is_object($cmd)) {
+			$cmd = new marantzdenonCmd();
+			$cmd->setLogicalId('ip');
+			$cmd->setIsVisible(0);
+			$cmd->setName(__('IP', __FILE__));
+		}
+		$cmd->setType('info');
+		$cmd->setSubType('string');
+		$cmd->setEqLogic_id($this->getId());
+		$cmd->setDisplay('generic_type', 'DONT');
+		$cmd->save();
 		
 		$cmd = $this->getCmd(null, 'reachable');
 		if (!is_object($cmd)) {
@@ -252,10 +267,12 @@ class marantzdenon extends eqLogic {
 			$cmd->setLogicalId('volume_up');
 			$cmd->setName(__('Volume +', __FILE__));
 			$cmd->setIsVisible(1);
+			$cmd->setDisplay('icon', '<i class="fa fa-volume-up"></i>');
 		}
 		$cmd->setType('action');
 		$cmd->setSubType('other');
 		$cmd->setEqLogic_id($this->getId());
+		
 		$cmd->save();
 		
 		$cmd = $this->getCmd(null, 'volume_down');
@@ -264,6 +281,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setLogicalId('volume_down');
 			$cmd->setName(__('Volume -', __FILE__));
 			$cmd->setIsVisible(1);
+			$cmd->setDisplay('icon', '<i class="fa fa-volume-down"></i>');
 		}
 		$cmd->setType('action');
 		$cmd->setSubType('other');
@@ -366,6 +384,21 @@ class marantzdenon extends eqLogic {
 				$cmd->remove();
 			}
 		}
+		
+		$cmd = $this->getCmd(null, 'netlogo');
+		if (!is_object($cmd)) {
+			$cmd = new marantzdenonCmd();
+			$cmd->setLogicalId('netlogo');
+			$cmd->setName(__('Logo', __FILE__));
+			$cmd->setIsVisible(0);
+		}
+		$cmd->setType('info');
+		$cmd->setSubType('string');
+		$cmd->setDisplay('icon',self::LOGOEMPTY);
+		$cmd->setOrder(100);
+		$cmd->setEqLogic_id($this->getId());
+		$cmd->save();
+		
 		
 		$convert = array(	// predefined models
 			'0'  => '', 
@@ -519,6 +552,8 @@ class marantzdenon extends eqLogic {
 					$this->save();
 				}
 			}
+			
+			$this->checkAndUpdateCmd('ip', $this->getConfiguration('ip'));
 			$this->updateInfo();
 		}
 	}
@@ -644,7 +679,9 @@ class marantzdenon extends eqLogic {
 			$tmpFuncInfoVal = $tmpFuncVal;
 			$tmpNetInfo = '';
 			$tmpNetVal = '';
+			$isNet = false;
 			if ( $tmpFuncValRaw == 'NET' ) {
+				$isNet = true;
 				$netdata = $this->getAmpInfoNet();
 				$tmpNetVal = $netdata['NETINPUT'];
 				$tmpNetInfo = ($netdata['NETINFO']=='')?'':(' (' .$netdata['NETINFO']. ')');
@@ -655,6 +692,7 @@ class marantzdenon extends eqLogic {
 			$this->checkAndUpdateCmd('input', $tmpFuncValRaw);
 			$this->checkAndUpdateCmd('input_info', $tmpFuncInfoVal);
 			$this->checkAndUpdateCmd('input_netinfo', $tmpNetInfo);
+			
 		}
 		
 		if (isset($infos['MasterVolume'])) {
@@ -668,6 +706,36 @@ class marantzdenon extends eqLogic {
 		
 		if (isset($infos['selectSurround'])) {
 			$this->checkAndUpdateCmd('sound_mode', $infos['selectSurround']);
+		}
+		
+		// manage logo
+		$this->updateLogo();
+	}
+	
+	public function updateLogo() {
+		$cmd = $this->getCmd(null, 'netlogo');
+		if ($cmd->getIsVisible()) {
+			//sleep();
+			$request_http = new com_http('http://'.$this->getConfiguration('ip').'/NetAudio/art.asp-jpg');
+			try {
+				$ret = $request_http->exec(1);
+				if ($ret && strlen($ret)>0) {
+					$img = '<img style="padding:10px;" src="http://'.$this->getConfiguration('ip').'/NetAudio/art.asp-jpg?tp='.time().'" height="80" width="80">';
+					$cmd->setDisplay('icon',$img);
+					$cmd->save();
+				}
+				else {
+					if ( $cmd->getDisplay('icon')!= self::LOGOEMPTY ) {
+						$cmd->setDisplay('icon',self::LOGOEMPTY);
+						$cmd->save();
+					}
+				}
+			} catch (Exception $e) {
+				if ( $cmd->getDisplay('icon')!= self::LOGOEMPTY ) {
+					$cmd->setDisplay('icon',self::LOGOEMPTY);
+					$cmd->save();
+				}
+			}
 		}
 	}
 	
@@ -726,6 +794,7 @@ class marantzdenonCmd extends cmd {
 		$cmds = explode(',', $cmds);
 		
 		$index=0;
+		$delay=0;
 		foreach ($cmds as $cmd) {
 			$cmd = trim($cmd);
 			$index++;
@@ -739,6 +808,7 @@ class marantzdenonCmd extends cmd {
 						$request_http = new com_http('http://' . $IP . self::URL_POST . '?'.(($zone=='')?'MV':$zone) .str_pad( $eqLogic->getConfiguration('volumedefault'), 2, "0", STR_PAD_LEFT ));
 						$this->http_exec_wrapper($request_http, 2);
 					}
+					$delay=2;
 				} else if ($cmd == 'off') {
 					if ($eqLogic->getConfiguration('volumedefault')>0) {
 						$request_http = new com_http('http://' . $IP . self::URL_POST . '?'.(($zone=='')?'MV':$zone) .str_pad( $eqLogic->getConfiguration('volumedefault'), 2, "0", STR_PAD_LEFT ));
@@ -747,7 +817,7 @@ class marantzdenonCmd extends cmd {
 					}
 					$request_http = new com_http('http://' . $IP . self::URL_POST . '?'.(($zone=='')?'PWSTANDBY':$zone.'OFF'));
 					$ret = $this->http_exec_wrapper($request_http, 10);
-					if ($ret) sleep(5);
+					if ($ret) $delay=5;
 				} else if ($cmd == 'volume_set') {
 					$request_http = new com_http('http://' . $IP . self::URL_POST . '?'.(($zone=='')?'MV':$zone) .str_pad( min($_options['slider'],$eqLogic->getConfiguration('volumemax')), 2, "0", STR_PAD_LEFT ));
 					$request_http->exec();
@@ -784,6 +854,7 @@ class marantzdenonCmd extends cmd {
 				} else if ( strpos($cmd, 'si_') === 0) {	// is a input change call
 					$request_http = new com_http('http://' . $IP . self::URL_POST . '?'. (($zone=='')?'SI':$zone) . str_replace('si_','',$cmd) );
 					$request_http->exec();
+					$delay=2;
 				} else if ( is_numeric($cmd) ) {
 					sleep($cmd);
 				} else if ($cmd == 'refresh' || $cmd == 'reachable') {
@@ -793,7 +864,7 @@ class marantzdenonCmd extends cmd {
 					$request_http->exec();
 				}
 				if ( $index==count($cmds) ) {	// update on last cmd
-					sleep(1);
+					sleep(1+$delay);
 					$eqLogic->updateInfo();
 				}
 			}
