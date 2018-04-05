@@ -107,7 +107,7 @@ foreach (object::all() as $object) {
         <div class="col-sm-3">
           <select type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="modelType" >
             <option value="auto">Auto</option>
-			<option value="NoInput">Ne pas créer d'entrées</option> 
+			<option value="NoInput">{{Ne pas créer d'entrées}}</option>
             <option value="Marantz_M-CR511">Marantz M-CR511</option>
 			<option value="Marantz_M-CR611">Marantz M-CR611</option>
 			<option value="Denon_Tuner">Denon AVR (tuner)</option>
@@ -116,6 +116,7 @@ foreach (object::all() as $object) {
 			<option value="BasicNotHomeCinema">Generique Ampli (pas de HDMI)</option>
           </select>
         </div>
+		<i>Essayez plusieurs modèles afn de trouver la configuration la plus proche.</i>
       </div>
       <div class="form-group">
         <label class="col-sm-3 control-label">{{Zone}}</label>
@@ -154,6 +155,13 @@ foreach (object::all() as $object) {
         </div>
 		Valeur entre 0 et 120 minutes (0 = désactivé)
       </div>
+	  <div class="form-group">
+		  <label class="col-sm-3 control-label">{{Pas volume +/-}}</label>
+		  <div class="col-sm-3">
+			<input type="number" min="1" max="10" value="1" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="volumestep" />
+		  </div>
+		Valeur entre 1 et 10 (défaut = 1)
+	  </div>
       <div class="form-group">
         <label class="col-sm-3 control-label">{{Peut être éteint}}</label>
         <div class="col-sm-3">
