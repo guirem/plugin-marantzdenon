@@ -29,15 +29,15 @@
     }
 	// check if predefined command
 	var predefCmd = ['ip','reachable','power_state', 'input', 'input_info', 'input_netinfo', 'netlogo',
-					 'volume_set', 'volume', 'volume_up', 'volume_down', 
+					 'volume_set', 'volume', 'volume_up', 'volume_down',
 					 'mute_state', 'mute_on', 'mute_off', 'sound_mode',
 					 'on', 'off', 'sleep', 'sleepbtn', 'refresh'
 					];
- 
+
 	var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
 	//console.log('hh : ' + _cmd.logicalId);
 	if ( (_cmd.logicalId != null) && ($.inArray(_cmd.logicalId, predefCmd)!=-1 || _cmd.logicalId.startsWith('fav_') || _cmd.logicalId.startsWith('si_')) ) {
-		
+
 		tr += '<td>';
 		tr += '<span class="cmdAttr" data-l1key="id" style="display:none;"></span>';
 		tr += '<span class="type" type="' + init(_cmd.type) + '" style="display:none;">' + jeedom.cmd.availableType() + '</span>';
@@ -67,7 +67,7 @@
 		tr += '</td>';
 	}
 	else {	// is new created command
-	
+
 		tr += '<td>';
 		tr += '<div class="row">';
 		tr += '<div class="col-sm-6">';
@@ -113,7 +113,7 @@
 		}
 		tr += '<i class="fa fa-minus-circle pull-right cmdAction cursor" data-action="remove"></i></td>';
 	}
-	
+
 	/*
     tr += '</tr>';
     $('#table_cmd tbody').append(tr);
