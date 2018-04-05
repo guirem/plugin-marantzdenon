@@ -712,7 +712,7 @@ class marantzdenonCmd extends cmd {
 					$request_http = new com_http('http://' . $IP . self::URL_POST . '?'.$zone.'SLP'.$sleepval);
 					$request_http->exec();
 				} else if ( strpos($cmd, 'si_') === 0) {	// is a input change call
-					$request_http = new com_http('http://' . $IP . self::URL_POST . '?'. (($zone=='')?'SI':$zone) . str_replace('si_','',strtoupper($cmd)) );
+					$request_http = new com_http('http://' . $IP . self::URL_POST . '?'. (($zone=='')?'SI':$zone) . strtoupper(str_replace('si_','',$cmd)) );
 					$request_http->exec();
 					$delay=2;
 				} else if ( is_numeric($cmd) ) {
