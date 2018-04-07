@@ -50,6 +50,7 @@ function copyTemplate($templateFilename) {
 	if (!file_exists($pathDest)) {
 		shell_exec('cp -f '.$pathSrc. ' '. $pathDest);
 	}
+	shell_exec('chmod +x '$pathDest);
 }
 
 function marantzdenon_remove() {

@@ -6,7 +6,7 @@ Liste des versions du plugin marantzdenon.
 
 ## Version du 07 avril 2018
 
-- Ajout d'un affichage dynamique pour dashbaord (voir doc) - Première version
+- Ajout d'un affichage dynamique pour dashbaord (voir doc) - BETA
 
 ![Display 1](../assets/display1.png "Display 1")
 
