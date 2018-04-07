@@ -115,6 +115,20 @@ class marantzdenon extends eqLogic {
 		$cmd->setEqLogic_id($this->getId());
 		$cmd->setDisplay('generic_type', 'GENERIC');
 		$cmd->save();
+		
+		$cmd = $this->getCmd(null, 'display');
+		if (!is_object($cmd)) {
+			$cmd = new marantzdenonCmd();
+			$cmd->setLogicalId('display');
+			$cmd->setIsVisible(1);
+			$cmd->setName(__('Display', __FILE__));
+		}
+		$cmd->setType('info');
+		$cmd->setSubType('string');
+		$cmd->setEqLogic_id($this->getId());
+		$cmd->setDisplay('generic_type', 'GENERIC');
+		$cmd->setTemplate('dashboard','marantzdenon_display');
+		$cmd->save();
 
 		$cmd = $this->getCmd(null, 'input_netinfo');
 		if (!is_object($cmd)) {
@@ -358,16 +372,21 @@ class marantzdenon extends eqLogic {
 		}
 		$cmd->setType('info');
 		$cmd->setSubType('string');
-		$cmd->setDisplay('icon',MarantzDenonConfig::$LOGO_EMPTY);
+		$cmd->setTemplate('dashboard','marantzdenon_playing');
 		$cmd->setEqLogic_id($this->getId());
 		$cmd->save();
 
 
 		if ($this->getConfiguration('ip') != '') {
 			$nextOrder = 30;
-			$infos = $this->getAmpInfo(false);
+			
+			$goOn = true;
+			try {
+				$infos = $this->getAmpInfo(false);
+			} catch (Exception $e) { $goOn = false; }
+			if (!is_array($infos)) { $goOn = false;	}	
 
-			if ($infos!==false) {	// if reachable
+			if ($goOn!==false) {	// if reachable
 				$model = $infos['ModelId'];
 
 				$modelInfo = (($infos['FriendlyName']=='')?'Inconnu':$infos['FriendlyName']) . ' (id=' .$model. ')';
@@ -420,6 +439,9 @@ class marantzdenon extends eqLogic {
 			}
 
 			$this->checkAndUpdateCmd('ip', $this->getConfiguration('ip'));
+			$this->checkAndUpdateCmd('netlogo', 'http://' . $this->getConfiguration('ip') . MarantzDenonConfig::$LOGO_URL);
+			$this->checkAndUpdateCmd('display', $this->getId());
+			
 			$this->updateInfo();
 		}
 	}
@@ -439,7 +461,7 @@ class marantzdenon extends eqLogic {
 			$request_http = new com_http('http://' . $this->getConfiguration('ip') . '/goform/formMainZone_MainZoneXml.xml' . $zone);
 		}
 		try {
-			$result = trim($request_http->exec(5));
+			$result = trim($request_http->exec(1));
 		} catch (Exception $e) {
 			if ($this->getConfiguration('canBeShutdown') == 1) {
 				return;
@@ -471,7 +493,7 @@ class marantzdenon extends eqLogic {
 		}
 		$request_http = new com_http('http://' . $this->getConfiguration('ip') . '/goform/formNetAudio_StatusXml.xml' . $zone);
 		try {
-			$result = trim($request_http->exec(5));
+			$result = trim($request_http->exec(1));
 		} catch (Exception $e) {
 			if ($this->getConfiguration('canBeShutdown') == 1) {
 				return;
@@ -508,13 +530,15 @@ class marantzdenon extends eqLogic {
 		} catch (Exception $e) {
 			$this->checkAndUpdateCmd('reachable', 0);
 			$this->checkAndUpdateCmd('power_state', 0);
-			$this->checkAndUpdateCmd('input_info', 'Non accessible');
+			$this->checkAndUpdateCmd('input', 'Unavailable');
+			$this->checkAndUpdateCmd('input_info', 'Unavailable');
 			return;
 		}
 		if (!is_array($infos)) {
 			$this->checkAndUpdateCmd('reachable', 0);
 			$this->checkAndUpdateCmd('power_state', 0);
-			$this->checkAndUpdateCmd('input_info', 'Non accessible');
+			$this->checkAndUpdateCmd('input', 'Unavailable');
+			$this->checkAndUpdateCmd('input_info', 'Unavailable');
 			return;
 		}
 
@@ -527,11 +551,14 @@ class marantzdenon extends eqLogic {
 			}
 		}
 
+		$state = 0;
 		if (isset($infos['Power'])) {
-			$this->checkAndUpdateCmd('power_state', ($infos['Power'] == 'ON') ? 1 : 0);
+			$state = ($infos['Power'] == 'ON') ? 1 : 0;
+			$this->checkAndUpdateCmd('power_state', $state);
 		}
 		else if (isset($infos['ZonePower'])) {
-			$this->checkAndUpdateCmd('power_state', ($infos['ZonePower'] == 'ON') ? 1 : 0);
+			$state = ($infos['ZonePower'] == 'ON') ? 1 : 0;
+			$this->checkAndUpdateCmd('power_state', $state);
 		}
 
 		if (isset($infos['InputFuncSelect'])) {
@@ -550,10 +577,11 @@ class marantzdenon extends eqLogic {
 				$isNet = true;
 				$netdata = $this->getAmpInfoNet();
 				$tmpNetVal = $netdata['NETINPUT'];
-				$tmpNetInfo = ($netdata['NETINFO']=='')?'':(' (' .$netdata['NETINFO']. ')');
+				$tmpNetInfo = ($netdata['NETINFO']=='')?'':($netdata['NETINFO']);
 				$tmpFuncVal  = MarantzDenonConfig::$INPUT_NAMES[ $tmpNetVal ];
 				$tmpFuncValRaw = $tmpNetVal;
-				$tmpFuncInfoVal = ($tmpFuncVal=='') ? $tmpNetVal : $tmpFuncVal . $tmpNetInfo;
+				//$tmpFuncInfoVal = ($tmpFuncVal=='') ? $tmpNetVal : $tmpFuncVal . $tmpNetInfo;
+				$tmpFuncInfoVal = ($tmpFuncVal) ? $tmpNetVal : $tmpFuncVal;
 			}
 			$this->checkAndUpdateCmd('input', $tmpFuncValRaw);
 			$this->checkAndUpdateCmd('input_info', $tmpFuncInfoVal);
@@ -573,36 +601,138 @@ class marantzdenon extends eqLogic {
 		if (isset($infos['selectSurround'])) {
 			$this->checkAndUpdateCmd('sound_mode', $infos['selectSurround']);
 		}
-
-		// manage logo
-		$this->updateLogo();
 	}
+	
+	public static function getAjaxDisplayData($id) {
+		$eqLogic = eqLogic::byId($id);
+		if ($eqLogic) {
+			return $eqLogic->getDisplayData();
+		}
+		return 'Error fetching '.$id;
+	}
+	
+	public static function getDisplayCommandList($id) {
+		$ret = array();
+		$eqLogic = eqLogic::byId($id);
+		if ($eqLogic) {
+			$cmds = $eqLogic->getCmd('action', null, true);
+			$input = array();
+			$fav = array();
+			foreach ($cmds as $cmd) {
+				$lid = $cmd->getLogicalId();
+				if ( strpos($lid, 'si_') === 0 )
+					$input[$cmd->getLogicalId()] = $cmd->getName();
+				if ( strpos($lid, 'fav_') === 0 )
+					$fav[$cmd->getLogicalId()] = $cmd->getName();
+			}
+		}
+		$ret['input'] = $input;
+		$ret['fav'] = $fav;
+		return json_encode($ret);
+	}
+	
+	
+	public static function sendDisplayAction($id, $cmd) {
+		$eqLogic = eqLogic::byId($id);
+		if ($eqLogic) {
+			$cmd = $eqLogic->getCmd(null, $cmd);
+			if (is_object($cmd)) {
+				$cmd->execute();
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public function getDisplayData() {
+		$data = array();
+		$data['mute'] = false;
+		$data['volume'] = false;
+		$data['state'] = '';
+		$data['surround'] = false;
+		$data['input'] = '';
+		$data['netinfo'] = false;
+		$data['online'] = true;
+		$data['playingstate'] = false;
 
-	public function updateLogo() {
-		$cmd = $this->getCmd(null, 'netlogo');
-		if ($cmd->getIsVisible()) {
-			//sleep();
-			$request_http = new com_http('http://'.$this->getConfiguration('ip').'/NetAudio/art.asp-jpg');
+		$online = true;
+		try {
+			$infos = $this->getAmpInfo(true);
+		} catch (Exception $e) {
+			$online = false;
+		}
+		if (!is_array($infos)) {
+			$online = false;
+		}
+
+		if ($online===true) {
+			if ( !isset($infos['InputFuncSelect']) || !isset($infos['MasterVolume']) || !isset($infos['Mute']) || !isset($infos['Power']) ) {
+				$infos2 = $this->getAmpInfo(false);
+				if (is_array($infos2)) {
+					$infos = array_merge($infos, $infos2);
+				}
+			}
+
+			$state = 0;
+			if (isset($infos['Power'])) {
+				$state = ($infos['Power'] == 'ON') ? 1 : 0;
+			}
+			else if (isset($infos['ZonePower'])) {
+				$state = ($infos['ZonePower'] == 'ON') ? 1 : 0;
+			}
+			$data['state'] = ($state)?true:'EN VEILLE';
+
+			if (isset($infos['InputFuncSelect'])) {
+				$tmpFuncValRaw = $infos['InputFuncSelect'];
+				if ( !array_key_exists($tmpFuncValRaw, MarantzDenonConfig::$INPUT_NAMES) ) {
+					$tmpFuncVal = $tmpFuncValRaw;
+				} else {
+					$tmpFuncVal = MarantzDenonConfig::$INPUT_NAMES[ $tmpFuncValRaw ];
+				}
+
+				$tmpFuncInfoVal = $tmpFuncVal;
+				$tmpNetInfo = '';
+				$tmpNetVal = '';
+				if ( $tmpFuncValRaw == 'NET' ) {
+					$netdata = $this->getAmpInfoNet();
+					$tmpNetVal = $netdata['NETINPUT'];
+					$tmpNetInfo = ($netdata['NETINFO']=='')?'':($netdata['NETINFO']);
+					$tmpFuncVal  = MarantzDenonConfig::$INPUT_NAMES[ $tmpNetVal ];
+					$tmpFuncValRaw = $tmpNetVal;
+					$tmpFuncInfoVal = ($tmpFuncVal=='') ? $tmpNetVal : $tmpFuncVal;
+				}
+				$data['input'] = $tmpFuncVal;
+				$data['netinfo'] = $tmpNetInfo;
+			}
+
+			if (isset($infos['MasterVolume'])) {
+				$data['volume'] = round(floatval($infos['MasterVolume']),0)+79;
+			}
+
+			if (isset($infos['Mute'])) {
+				$data['mute'] = ($infos['Mute']=='off')?false:true;
+			}
+
+			if (isset($infos['selectSurround'])) {
+				$data['surround'] = $infos['selectSurround'];
+			}
+			
+			$data['playinglogo'] = 'R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
+			$request_http = new com_http('http://' . $this->getConfiguration('ip') . MarantzDenonConfig::$LOGO_URL);	
 			try {
 				$ret = $request_http->exec(1);
 				if ($ret && strlen($ret)>0) {
-					$img = '<img style="padding:10px;" src="http://'.$this->getConfiguration('ip').'/NetAudio/art.asp-jpg?tp='.time().'" height="80" width="80">';
-					$cmd->setDisplay('icon',$img);
-					$cmd->save();
+					$data['playinglogo'] = base64_encode ($ret);
+					$data['playingstate'] = true;
 				}
-				else {
-					if ( $cmd->getDisplay('icon')!= MarantzDenonConfig::$LOGO_EMPTY ) {
-						$cmd->setDisplay('icon',MarantzDenonConfig::$LOGO_EMPTY);
-						$cmd->save();
-					}
-				}
-			} catch (Exception $e) {
-				if ( $cmd->getDisplay('icon')!= MarantzDenonConfig::$LOGO_EMPTY ) {
-					$cmd->setDisplay('icon',MarantzDenonConfig::$LOGO_EMPTY);
-					$cmd->save();
-				}
-			}
+			} catch (Exception $e) {}
+			
 		}
+		else {
+			$data['online'] = 'Inaccessible';
+		}
+		
+		return json_encode($data);
 	}
 
 
@@ -653,7 +783,7 @@ class marantzdenonCmd extends cmd {
 			if ($type == 'action') {
 				if ($cmd == 'on') {
 					$request_http = new com_http('http://' . $IP . self::URL_POST . '?'.(($zone=='')?'PWON':$zone.'ON'));
-					$ret = $this->http_exec_wrapper($request_http, 10);
+					$ret = $this->http_exec_wrapper($request_http, 4);
 					if ($ret && $eqLogic->getConfiguration('volumedefault')>0) {
 						sleep(8);
 						$request_http = new com_http('http://' . $IP . self::URL_POST . '?'.(($zone=='')?'MV':$zone) .str_pad( $eqLogic->getConfiguration('volumedefault'), 2, "0", STR_PAD_LEFT ));
@@ -667,7 +797,7 @@ class marantzdenonCmd extends cmd {
 						sleep(1);
 					}
 					$request_http = new com_http('http://' . $IP . self::URL_POST . '?'.(($zone=='')?'PWSTANDBY':$zone.'OFF'));
-					$ret = $this->http_exec_wrapper($request_http, 10);
+					$ret = $this->http_exec_wrapper($request_http, 4);
 					if ($ret) $delay=5;
 				} else if ($cmd == 'volume_set') {
 					$request_http = new com_http('http://' . $IP . self::URL_POST . '?'.(($zone=='')?'MV':$zone) .str_pad( min($_options['slider'],$eqLogic->getConfiguration('volumemax')), 2, "0", STR_PAD_LEFT ));
