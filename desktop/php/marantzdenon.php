@@ -5,6 +5,7 @@ if (!isConnect('admin')) {
 $plugin = plugin::byId('marantzdenon');
 sendVarToJS('eqType', $plugin->getId());
 $eqLogics = eqLogic::byType($plugin->getId());
+
 ?>
 
 <div class="row row-overflow">
@@ -108,12 +109,11 @@ foreach (object::all() as $object) {
           <select type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="modelType" >
             <option value="auto">Auto</option>
 			<option value="NoInput">{{Ne pas créer d'entrées}}</option>
-            <option value="Marantz_M-CR511">Marantz M-CR511</option>
-			<option value="Marantz_M-CR611">Marantz M-CR611</option>
-			<option value="Denon_Tuner">Denon AVR (tuner)</option>
-			<option value="Denon_Phono">Denon AVR (sans tuner)</option>
-			<option value="BasicHomeCinema">Generique Home Cinema</option>
-			<option value="BasicNotHomeCinema">Generique Ampli (pas de HDMI)</option>
+<?php
+		foreach ($eqLogic->getModelDescriptions() as $key => $value){
+			echo '<option value="' .$key. '">' .$value['Name']. '</option>';
+		}
+?>
           </select>
         </div>
 		<i>Essayez plusieurs modèles afn de trouver la configuration la plus proche.</i>

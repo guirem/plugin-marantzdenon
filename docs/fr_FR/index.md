@@ -38,8 +38,10 @@ Plugin pour commander les ampli de marque Marantz et Denon via Jeedom.
 Dashboard
 =======================
 
+
 ![Visuel du dashboard](../assets/dashboard.png "Visuel du dashboard")
 ![Visuel du dashboard](../assets/dashboard2.png "Visuel du dashboard 2")
+![Display 1](../assets/display1.png "Display 1")
 
 Configuration du plugin
 =======================

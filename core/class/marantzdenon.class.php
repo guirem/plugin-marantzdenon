@@ -46,6 +46,48 @@ class marantzdenon extends eqLogic {
 		if ($this->getConfiguration('favoriCount') == '') {
 			throw new Exception(__('Le champs Nombre de favoris ne peut etre vide', __FILE__));
 		}
+		
+		$isConnected = true;
+		try {
+			$infos = $this->getAmpInfo(false);
+		} catch (Exception $e) { $isConnected = false; }
+		if (!is_array($infos)) { $isConnected = false;	}
+			
+		if ( $this->getConfiguration('modelType') == 'auto' ) {
+				
+			if ($isConnected===true) {	// if reachable
+				$model = $infos['ModelId'];
+				if ( isset(MarantzDenonConfig::$INPUT_MATRIX[$model]) ) {
+					$this->setConfiguration('modelType',MarantzDenonConfig::$INPUT_MATRIX[$model]);
+				}
+				else {
+					throw new Exception(__('Modèle non reconnu ('.$model.'), veuillez choisir un modèle.', __FILE__));
+				}
+			}
+			else {
+				throw new Exception(__('Ampli non disponible. Vérifier IP ou choisir un modèle.', __FILE__));
+			}
+		}
+		
+		if ($isConnected===true) {
+			$modelInfo = (($infos['FriendlyName']=='')?'Inconnu':$infos['FriendlyName']) . ' (id=' .$model. ')';
+			if ($this->getConfiguration('modelInfo') != $modelInfo) {
+				$this->setConfiguration('modelInfo', $modelInfo);
+			}
+		}
+
+	}
+	
+	public static function getModelDescriptions() {
+		return MarantzDenonConfig::$MODEL_DESCRIPTIONS;
+	}
+	
+	public function getModelDescItem($key) {
+		if ( isset(MarantzDenonConfig::$MODEL_DESCRIPTIONS[$this->getConfiguration('modelType')]) )
+			$mod = MarantzDenonConfig::$MODEL_DESCRIPTIONS[$this->getConfiguration('modelType')];
+			if ( isset($mod[$key]) )
+				return $mod[$key];
+		return null;
 	}
 
 	public function postSave() {
@@ -198,9 +240,12 @@ class marantzdenon extends eqLogic {
 		if ($this->getConfiguration('volumemax')>0) {
 			$cmd->setConfiguration('maxValue', $this->getConfiguration('volumemax'));
 		} else {
-			$cmd->setConfiguration('maxValue', MarantzDenonConfig::$MAX_VOLUME);
-		$cmd->setValue($volume_id);
+			if ($this->getModelDescItem('MaxVolume')!==false)
+				$cmd->setConfiguration('maxValue', $this->getModelDescItem('MaxVolume'));
+			else
+				$cmd->setConfiguration('maxValue', MarantzDenonConfig::$MAX_VOLUME);
 		}
+		$cmd->setValue($volume_id);
 		$cmd->setEqLogic_id($this->getId());
 		$cmd->save();
 
@@ -376,68 +421,48 @@ class marantzdenon extends eqLogic {
 		$cmd->setEqLogic_id($this->getId());
 		$cmd->save();
 
-
 		if ($this->getConfiguration('ip') != '') {
 			$nextOrder = 30;
 			
-			$goOn = true;
-			try {
-				$infos = $this->getAmpInfo(false);
-			} catch (Exception $e) { $goOn = false; }
-			if (!is_array($infos)) { $goOn = false;	}	
+			$model = $this->getConfiguration('modelType');
 
-			if ($goOn!==false) {	// if reachable
-				$model = $infos['ModelId'];
-
-				$modelInfo = (($infos['FriendlyName']=='')?'Inconnu':$infos['FriendlyName']) . ' (id=' .$model. ')';
-
-				if (isset(MarantzDenonConfig::$INPUT_MATRIX[$model])) {
-					$model = MarantzDenonConfig::$INPUT_MATRIX[$model];
-				}
-				if (isset(MarantzDenonConfig::$INPUT_MODELS[$model])) {
-					$modelInputArray = MarantzDenonConfig::$INPUT_MODELS[$model];
-				}
-				if ($this->getConfiguration('modelType') != 'auto') {
-					$modelInputArray = MarantzDenonConfig::$INPUT_MODELS[$this->getConfiguration('modelType')];
-				}
-				if ( $this->getConfiguration('modelType') == 'auto' && !isset(MarantzDenonConfig::$INPUT_MODELS[$model]) ) {
-					$modelInputArray = MarantzDenonConfig::$INPUT_MODELS['BasicHomeCinema'];
-				}
-				// clean old si_ cmd
-				foreach (MarantzDenonConfig::$INPUT_NAMES as $key => $value) {
-					if ( !array_key_exists($key, $modelInputArray) ) {
-						$cmd = $this->getCmd(null, 'si_' . $key);
-						if (is_object($cmd)) {
-							$cmd->remove();
-						}
-					}
-				}
-
-				// create new
-				foreach ($modelInputArray as $key => $value) {
-					$nextOrder+=1;
-					$cmd = $this->getCmd(null, 'si_'.$key);
-					if (!is_object($cmd)) {
-						$cmd = new marantzdenonCmd();
-						$cmd->setLogicalId('si_'.$key);
-						$cmd->setName($value);
-						$cmd->setOrder($nextOrder);
-						$cmd->setIsVisible(1);
-					}
-					$cmd->setType('action');
-					$cmd->setSubType('other');
-					$cmd->setEventOnly(1);
-					$cmd->setEqLogic_id($this->getId());
-
-					$cmd->save();
-				}
-
-				if ($this->getConfiguration('modelInfo') != $modelInfo) {
-					$this->setConfiguration('modelInfo', $modelInfo);
-					$this->save();
-				}
+			if (isset(MarantzDenonConfig::$INPUT_MATRIX[$model])) {
+				$model = MarantzDenonConfig::$INPUT_MATRIX[$model];
+			}
+			if (isset(MarantzDenonConfig::$INPUT_MODELS[$model])) {
+				$modelInputArray = MarantzDenonConfig::$INPUT_MODELS[$model];
+			}
+			if ($this->getConfiguration('modelType') != 'auto') {
+				$modelInputArray = MarantzDenonConfig::$INPUT_MODELS[$this->getConfiguration('modelType')];
 			}
 
+			// clean old si_ cmd
+			foreach (MarantzDenonConfig::$INPUT_NAMES as $key => $value) {
+				if ( !array_key_exists($key, $modelInputArray) ) {
+					$cmd = $this->getCmd(null, 'si_' . $key);
+					if (is_object($cmd)) {
+						$cmd->remove();
+					}
+				}
+			}
+			// create new
+			foreach ($modelInputArray as $key => $value) {
+				$nextOrder+=1;
+				$cmd = $this->getCmd(null, 'si_'.$key);
+				if (!is_object($cmd)) {
+					$cmd = new marantzdenonCmd();
+					$cmd->setLogicalId('si_'.$key);
+					$cmd->setName($value);
+					$cmd->setOrder($nextOrder);
+					$cmd->setIsVisible(1);
+				}
+				$cmd->setType('action');
+				$cmd->setSubType('other');
+				$cmd->setEventOnly(1);
+				$cmd->setEqLogic_id($this->getId());
+				$cmd->save();
+			}
+		
 			$this->checkAndUpdateCmd('ip', $this->getConfiguration('ip'));
 			$this->checkAndUpdateCmd('netlogo', 'http://' . $this->getConfiguration('ip') . MarantzDenonConfig::$LOGO_URL);
 			$this->checkAndUpdateCmd('display', $this->getId());
@@ -581,7 +606,7 @@ class marantzdenon extends eqLogic {
 				$tmpFuncVal  = MarantzDenonConfig::$INPUT_NAMES[ $tmpNetVal ];
 				$tmpFuncValRaw = $tmpNetVal;
 				//$tmpFuncInfoVal = ($tmpFuncVal=='') ? $tmpNetVal : $tmpFuncVal . $tmpNetInfo;
-				$tmpFuncInfoVal = ($tmpFuncVal) ? $tmpNetVal : $tmpFuncVal;
+				$tmpFuncInfoVal = ($tmpFuncVal=='') ? $tmpNetVal : $tmpFuncVal;
 			}
 			$this->checkAndUpdateCmd('input', $tmpFuncValRaw);
 			$this->checkAndUpdateCmd('input_info', $tmpFuncInfoVal);

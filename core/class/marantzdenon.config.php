@@ -21,42 +21,45 @@
 class MarantzDenonConfig {
 	/*     * *************************Attributs****************************** */
 
-	public static $MAX_VOLUME = 98;//19;
-	public static $MIN_VOLUME = 0;//-79;
+	public static $MAX_VOLUME = 98;//19;    Default max volume
+	public static $MIN_VOLUME = 0;//-79;	Default min volume
 	
 	public static $LOGO_URL = '/NetAudio/art.asp-jpg';
 	
-	// All possible names of input
-	public static $INPUT_NAMES = array(
-				'NET' => 'Network',
-				'USB/IPOD' => 'iPod/USB',
-				'USB' => 'USB',
-				'REARUSB' => 'USB Arrière',
-				'SERVER' => 'Media Server',
-				'DIGITALIN1' => 'Optique',
-				'DIGITALIN2' => 'Optique 2',
-				'ANALOGIN' => 'Analogique',
-				'BLUETOOTH' => 'Bluetooth',
-				'BT' => 'Bluetooth',
-				'IRADIO' => 'Internet Radio',
-				'SAT/CBL' => 'CBL/SAT',
-				'DVD' => 'DVD/Blu-ray',
-				'BD' => 'Blu-ray',
-				'GAME' => 'Game',
-				'AUX1' => 'Aux 1',
-				'AUX2' => 'Aux 2',
-				'MPLAY' => 'Media Player',
-				'SPOTIFY' => 'Spotify',
-				'FLICKR' => 'FlickR',
-				'FAVORITES' => 'Favoris',
-				'TV' => 'TV Audio',
-				'TUNER' => 'Tuner',
-				'NETHOME' => 'Online Music',
-				'BT' => 'Bluetooth',
-				'IRP' => 'Internet Radio',
-				'CD' => 'CD',
-				'PHONO' => 'Phono',
-			);
+
+	// match betwenn device model id and predefined models (used for auto mode)
+	public static $MODEL_DESCRIPTIONS = array(	
+			'Marantz_M-CR511'  => array (
+				'Name' => 'Marantz M-CR511',
+				'Tooltip' => ''
+			),
+			'Marantz_M-CR611' => array (
+				'Name' => 'Marantz M-CR611',
+				'Tooltip' => '',
+			),
+			'Denon_CEOL' => array (
+				'Name' => 'Denon CEOL N5/8',
+				'Tooltip' => '',
+				'MaxVolume' => 60,
+			),
+			'Denon_Tuner' => array (
+				'Name' => 'Denon AVR (tuner)',
+				'Tooltip' => '',
+			), 
+			'Denon_Phono' => array (
+				'Name' => 'Denon AVR (sans tuner)',
+				'Tooltip' => '',
+			), 
+			'BasicHomeCinema' => array (
+				'Name' => 'Generique Home Cinema',
+				'Tooltip' => '',
+			), 
+			'BasicNotHomeCinema' => array (
+				'Name' => 'Generique Ampli (pas de HDMI)',
+				'Tooltip' => '',
+			), 
+		);
+		
 
 	// match betwenn device model id and predefined models (used for auto mode)
 	public static $INPUT_MATRIX = array(	
@@ -124,6 +127,20 @@ class MarantzDenonConfig {
 				'SERVER' => 'Media Server',
 				'REARUSB' => 'USB Arrière',
 			),
+			'Denon_CEOL' => array(	// Denon  CEOL N8/5
+				'IPOD' => 'iPod',
+				'AUXD' => 'Optique',
+				'PORTABLE_IN' => 'Portable',
+				'AUXB' => 'Analogique',
+				'BLUETOOTH' => 'Bluetooth',
+				'IRADIO' => 'iRadio',
+				'SPOTIFY' => 'Spotify',
+				'CD' => 'CD',
+				'SERVER' => 'Media Server',
+				'USB' => 'USB',
+				'FM' => 'Tuner',
+				'DAB' => 'DAB Tuner',
+			),
 			'Denon_Tuner' => array(
 				'SAT/CBL' => 'CBL/SAT',
 				'DVD' => 'DVD/Blu-ray',
@@ -158,4 +175,37 @@ class MarantzDenonConfig {
 				'PHONO' => 'Phono',
 			),
 		);
+		
+		
+	// All possible names of input
+	public static $INPUT_NAMES = array(
+				'NET' => 'Network',
+				'USB/IPOD' => 'iPod/USB',
+				'USB' => 'USB',
+				'REARUSB' => 'USB Arrière',
+				'SERVER' => 'Media Server',
+				'DIGITALIN1' => 'Optique',
+				'DIGITALIN2' => 'Optique 2',
+				'ANALOGIN' => 'Analogique',
+				'BLUETOOTH' => 'Bluetooth',
+				'BT' => 'Bluetooth',
+				'IRADIO' => 'Internet Radio',
+				'SAT/CBL' => 'CBL/SAT',
+				'DVD' => 'DVD/Blu-ray',
+				'BD' => 'Blu-ray',
+				'GAME' => 'Game',
+				'AUX1' => 'Aux 1',
+				'AUX2' => 'Aux 2',
+				'MPLAY' => 'Media Player',
+				'SPOTIFY' => 'Spotify',
+				'FLICKR' => 'FlickR',
+				'FAVORITES' => 'Favoris',
+				'TV' => 'TV Audio',
+				'TUNER' => 'Tuner',
+				'NETHOME' => 'Online Music',
+				'BT' => 'Bluetooth',
+				'IRP' => 'Internet Radio',
+				'CD' => 'CD',
+				'PHONO' => 'Phono',
+			);
 }

@@ -24,3 +24,4 @@ Plugin [user documentation (fr)](docs/fr_FR/index.md).
 
 - List compatible devices
 - Add more pre-configured devices based on their modelId
+- Make it works from mobile widget
