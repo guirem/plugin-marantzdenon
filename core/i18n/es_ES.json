@@ -1,0 +1,42 @@
+{
+    "plugins\/marantzdenon\/plugin_info\/info.xml": {
+        "Aucune": "Aucune"
+    },
+    "plugins\/marantzdenon\/desktop\/php\/marantzdenon.php": {
+        "Ajouter une commande": "Ajouter une commande",
+        "Rechercher": "Rechercher",
+        "Mes Amplis": "Mes Amplis",
+        "Général": "Général",
+        "Objet parent": "Objet parent",
+        "Aucun": "Aucun",
+        "Activer": "Activer",
+        "Visible": "Visible",
+        "Equipement": "Equipement",
+		"Commandes": "Commandes",
+        "Ajouter": "Ajouter",
+        "Supprimer": "Supprimer",
+        "Sauvegarder": "Sauvegarder",
+        "Catégorie": "Catégorie",
+        "Configuration avancée": "Configuration avancée",
+        "Nombre de favoris": "Nombre de favoris",
+        "Modèle identifié": "Modèle identifié",
+		"Modèle": "Modèle",
+		"Ne pas créer d'entrées": "Ne pas créer d'entrées",
+		"Volume maximum": "Volume maximum",
+		"Volume par défaut": "Volume par défaut",
+		"Durée Veille par défaut": "Durée Veille par défaut",
+		"Peut être éteint": "Peut être éteint"
+    },
+    "plugins\/marantzdenon\/desktop\/js\/marantzdenon.js": {
+        "Afficher": "Afficher",
+        "Tester": "Tester",
+        "Nom": "Nom",
+        "Supprimer": "Supprimer",
+        "Icône": "Icône",
+        "Commande": "Commande"
+    },
+    "plugins\/marantzdenon\/core\/class\/marantzdenon.class.php": {
+        "Le champs IP ne peut etre vide": "Le champs IP ne peut etre vide",
+        "Le champs Nombre de favoris ne peut etre vide": "Le champs Nombre de favoris ne peut etre vide"
+    }
+}
