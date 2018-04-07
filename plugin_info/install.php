@@ -40,8 +40,8 @@ function marantzdenon_install() {
 
 function copyTemplate($templateFilename) {
 	log::add('marantzdenon','info',"Copie du template " . $templateFilename);
-	$pathSrc = dirname(__FILE__) . '/../core/template/dasboard/'.$templateFilename;
-	$pathDest = dirname(__FILE__) . '/../../../core/template/dasboard/'.$templateFilename;
+	$pathSrc = dirname(__FILE__) . '/../core/template/dashboard/'.$templateFilename;
+	$pathDest = dirname(__FILE__) . '/../../../core/template/dashboard/'.$templateFilename;
 	if (!rcopy($pathSrc, $pathDest, true, array(), true)) {
 		//throw new Exception(__('Impossible de copier ', __FILE__) . $templateFilename);
 		message::add('marantzdenon', "Impossible de copier " . $templateFilename, null, null);
@@ -59,7 +59,7 @@ function marantzdenon_remove() {
 
 function removeTemplate($templateFilename) {
 	log::add('marantzdenon','info',"Suppression du template " . $templateFilename);
-	$path = dirname(__FILE__) . '/../../../core/template/dasboard/'.$templateFilename;
+	$path = dirname(__FILE__) . '/../../../core/template/dashboard/'.$templateFilename;
 	$allowWritePath = config::byKey('allowWriteDir', 'widget');
 	if (!hadFileRight($allowWritePath, $path)) {
 		//throw new Exception(__('Vous n\'etes pas autoriser à écrire : ', __FILE__) . $path);
