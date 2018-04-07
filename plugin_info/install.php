@@ -37,12 +37,12 @@ function marantzdenon_install() {
 }
 
 function copyTemplate($templateFilename) {
-	echo "Copie des templates...";
+	message::add('marantzdenon', "Copie du template " . $templateFilename, null, null);
 	$pathSrc = realpath(dirname(__FILE__) . '/../core/template/dasboard/'.$templateFilename);
 	$pathDest = realpath(dirname(__FILE__) . '/../../../core/template/dasboard/'.$templateFilename);
 	if (!rcopy($pathSrc, $pathDest, true, array(), true)) {
 		//throw new Exception(__('Impossible de copier ', __FILE__) . $templateFilename);
-		echo "Impossible de copier " . $templateFilename;
+		message::add('marantzdenon', "Imossible de copier le template " . $templateFilename, null, null);
 		return;
 	}
 }
@@ -53,6 +53,7 @@ function marantzdenon_remove() {
 }
 
 function removeTemplate($templateFilename) {
+	message::add('marantzdenon', "Suppression du template " . $templateFilename, null, null);
 	$path = realpath(dirname(__FILE__) . '/../../../core/template/dasboard/'.$templateFilename);
 	$allowWritePath = config::byKey('allowWriteDir', 'widget');
 	if (!hadFileRight($allowWritePath, $path)) {
