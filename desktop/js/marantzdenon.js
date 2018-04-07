@@ -28,7 +28,7 @@
         _cmd.configuration = {};
     }
 	// check if predefined command
-	var predefCmd = ['ip','reachable','power_state', 'input', 'input_info', 'input_netinfo', 'netlogo',
+	var predefCmd = ['ip','reachable','power_state', 'input', 'input_info', 'input_netinfo', 'netlogo', 'display',
 					 'volume_set', 'volume', 'volume_up', 'volume_down',
 					 'mute_state', 'mute_on', 'mute_off', 'sound_mode',
 					 'on', 'off', 'sleep', 'sleepbtn', 'refresh'

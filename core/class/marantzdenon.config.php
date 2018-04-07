@@ -24,7 +24,7 @@ class MarantzDenonConfig {
 	public static $MAX_VOLUME = 98;//19;
 	public static $MIN_VOLUME = 0;//-79;
 	
-	public static $LOGO_EMPTY = '<img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" width="0" height="0" alt="">';
+	public static $LOGO_URL = '/NetAudio/art.asp-jpg';
 	
 	// All possible names of input
 	public static $INPUT_NAMES = array(
