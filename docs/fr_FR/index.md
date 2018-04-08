@@ -120,6 +120,15 @@ Installation / configuration :
 - Pour une utilisation dans un dashboard, iL est possible d'utiliser un virtuel en créant une commande de type *info / autres* avec pour valeur la commande *Display* de l'ampli. Appliquer alors le widget dashboard *marantzdenon_display* (dans la configuration avancée de la commande)
 - Pour une utilisation dans un design, ajouter la commande *Display* directement dans le design.
 
+Paramêtres CSS optionels (via '*Paramètres optionnels widget*'):
+- *fontSize* (ex: 35px, défaut=25px) : taille de police de base
+- *fontColor* (ex: blue, défaut=white) : couleur de l'afficheur
+- *fontFamily* (ex: 'Arial') : change la police de l'afficheur
+- *backColor* (ex: blue, défaut=black) : couleur du fond de l'afficheur
+- *playingSize* (ex: 50px, défaut=80px) : taille de l'image de lecture en cours
+- *showPlaying* (true/false , défaut=true) : active/désactive l'affichage de lecture en cours
+- *additionalCss* (format css, ex: '.blabla {...}') : ajouter/modifier d'autres CSS (utilisateur avancé)
+
 > **Notes**  
 
 > Non disponible pour mobile pour le moment
@@ -131,6 +140,10 @@ La commande de type information appelée 'Logo' (caché par défaut) permet d'af
 L'afficheur se rafraichit toutes les 20 secondes par défaut.
 
 ![Display 1](../assets/display_logo.png "Display 1")
+
+Paramêtres CSS optionels (via '*Paramètres optionnels widget*'):
+- *playingSize* (ex 35px) : Taille de l'image de lecture en cours
+- *additionalCss* (format css, ex: '.blabla {...}') : pour ajouter/modifier d'autres CSS (utilisateur avancé)
 
 > **Notes**   
 > Voir Afficheur digital pour l'inclure dans d'autres composants.

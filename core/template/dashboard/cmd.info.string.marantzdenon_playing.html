@@ -4,10 +4,17 @@
 	border: 1px solid white;
     border-radius: 7px;
 	padding:3px;
+	min-width:100px;
+	min-height:100px;
+	display:block;
+	min-width:#playingSize#;
+	min-height:#playingSize#;
 }
+.ampliplaying { width:100px;height:100px;width:#playingSize#;height:#playingSize#;}
+#additionalCss#
 </style>
-<div style="min-width:100px;min-height:100px;" class="tooltips cmd cmd-widget amplilogo" data-type="info" data-subtype="string" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#" style="display: block;">
-	<center><img class='ampliplaying' src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" height="100" width="100"></center>
+<div class="tooltips cmd cmd-widget amplilogo" data-type="info" data-subtype="string" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#">
+	<center><img class='ampliplaying' src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="></center>
 	<script>
 		marantzdenonRefreshPlaying = function() {
 			$.ajax({

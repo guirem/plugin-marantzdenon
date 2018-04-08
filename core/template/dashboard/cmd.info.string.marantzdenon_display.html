@@ -12,6 +12,10 @@
 	border: 1px solid white;
     border-radius: 7px;
 	font-size:25px;
+	font-size:#fontSize#;
+	color:#fontColor#;
+	background-color: #backColor#;
+	font-family:#fontFamily#;
 }
 .ajaxamplidisplay table {
 	border-collapse:collapse;border-spacing:0;width:100%;border-width:0px;padding:0px;text-align:center;overflow: hidden;
@@ -21,13 +25,15 @@
 .line2  { font-size:80%;}
 .line3  { font-size:65%;}
 .line4  { font-size:50%;padding-top:8px;border-top-width:0px;border-top-style:solid;border-top-color:grey;font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;}
-.colplaying  { padding-right:5px;font-size:65%;width:80px;vertical-align:top}
+.colplaying  { padding-right:5px;font-size:65%;vertical-align:top;width:80px;width:#playingSize#;}
+.colplaying img { width:80px;height:80px;width:#playingSize#;height:#playingSize#;}
 .btcontrol  { font-size:70%;cursor:pointer;margin-top:7px;padding:1px;float:left;}
 .btcontrol:hover { color: red; }
 .btinput  { cursor:pointer;}
 .btinput:hover { color: red; }
 .data {visibility:hidden;}
 .controlbar {padding-left:6px;}
+#additionalCss#
 </style>
 <div style="min-width:250px;min-height:150px;" class="tooltips cmd cmd-widget ajaxamplidisplay" data-type="info" data-subtype="string" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#" style="display: block;">
   <i class="fa fa-ellipsis-h btcontrol" style="color:grey;position:absolute;padding:5px;top:-10px;left:0px;"></i>
@@ -38,7 +44,7 @@
 	  <tr>
         <td rowspan="3" class="controlbar"><i class="fa fa-volume-up btcontrol"/><i class="fa fa-volume-down btcontrol"/><i class="fa fa-volume-off btcontrol"/></td>
         <td class="line1"></td>
-        <td rowspan="3" class="colplaying"><img class='ampliplaying' src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" height="80" width="80"/></td>
+        <td rowspan="3" class="colplaying"><img class='ampliplaying' src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="/></td>
       </tr>
 	  <tr><td class="line2"></td></tr>
 	  <tr><td class="line3"></td></tr>
@@ -49,7 +55,7 @@
       //$(function() {
         // config
         var showLogoPlaying=true;
-        if("#showPlaying#" == "false" || "#showPlaying#" == "1"){
+        if("#showPlaying#" == "false" || "#showPlaying#" == "0"){
           showLogoPlaying = false;
         }
         var minWidthShowLogoPlaying=300;
