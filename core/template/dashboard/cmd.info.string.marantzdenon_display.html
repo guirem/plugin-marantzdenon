@@ -179,9 +179,10 @@
 
 								root.find('.line3').empty().append(soundstring);
 
-								if (data.playingstate===false || !showLogoPlaying || root.width() < minWidthShowLogoPlaying)
+								if (data.playingstate===false || !showLogoPlaying || root.width() < minWidthShowLogoPlaying) {
 									root.find('.colplaying').hide();
-								else {
+                                    root.find('.data[data-ret=playinglogo]').val(0);
+                                } else {
 									if ( root.find('.data[data-ret=playinglogo]').val() != data.playinglogo.length) {
 										root.find('.ampliplaying').attr('src','data:image/png;base64,' + data.playinglogo);
 										root.find('.data[data-ret=playinglogo]').val(data.playinglogo.length);
