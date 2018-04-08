@@ -110,9 +110,11 @@ foreach (object::all() as $object) {
             <option value="auto">Auto</option>
 			<option value="NoInput">{{Ne pas créer d'entrées}}</option>
 <?php
+	if ($eqLogic) {
 		foreach ($eqLogic->getModelDescriptions() as $key => $value){
 			echo '<option value="' .$key. '">' .$value['Name']. '</option>';
 		}
+	}
 ?>
           </select>
         </div>

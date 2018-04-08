@@ -76,7 +76,6 @@ class marantzdenon extends eqLogic {
 				$this->setConfiguration('modelInfo', $modelInfo);
 			}
 		}
-
 	}
 
 	public static function getModelDescriptions() {
@@ -99,6 +98,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setLogicalId('ip');
 			$cmd->setIsVisible(0);
 			$cmd->setName(__('IP', __FILE__));
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('info');
 		$cmd->setSubType('string');
@@ -112,6 +112,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setLogicalId('reachable');
 			$cmd->setIsVisible(0);
 			$cmd->setName(__('Accessible', __FILE__));
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('info');
 		$cmd->setSubType('binary');
@@ -125,6 +126,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setLogicalId('power_state');
 			$cmd->setIsVisible(0);
 			$cmd->setName(__('Etat', __FILE__));
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('info');
 		$cmd->setSubType('binary');
@@ -139,6 +141,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setLogicalId('input');
 			$cmd->setIsVisible(1);
 			$cmd->setName(__('Input', __FILE__));
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('info');
 		$cmd->setSubType('string');
@@ -152,6 +155,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setLogicalId('input_info');
 			$cmd->setIsVisible(1);
 			$cmd->setName(__('Entrée', __FILE__));
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('info');
 		$cmd->setSubType('string');
@@ -164,8 +168,9 @@ class marantzdenon extends eqLogic {
 		if (!is_object($cmd)) {
 			$cmd = new marantzdenonCmd();
 			$cmd->setLogicalId('display');
-			$cmd->setIsVisible(0);
+			$cmd->setIsVisible(1);
 			$cmd->setName(__('Display', __FILE__));
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('info');
 		$cmd->setSubType('string');
@@ -180,6 +185,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setLogicalId('input_netinfo');
 			$cmd->setIsVisible(0);
 			$cmd->setName(__('Playing', __FILE__));
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('info');
 		$cmd->setSubType('string');
@@ -193,6 +199,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setLogicalId('volume');
 			$cmd->setIsVisible(1);
 			$cmd->setName(__('Volume', __FILE__));
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('info');
 		$cmd->setSubType('numeric');
@@ -208,6 +215,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setLogicalId('mute_state');
 			$cmd->setIsVisible(0);
 			$cmd->setName(__('Mute', __FILE__));
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('info');
 		$cmd->setSubType('binary');
@@ -222,6 +230,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setLogicalId('sound_mode');
 			$cmd->setIsVisible(0);
 			$cmd->setName(__('Audio', __FILE__));
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('info');
 		$cmd->setSubType('string');
@@ -235,6 +244,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setLogicalId('volume_set');
 			$cmd->setName(__('Volume niveau', __FILE__));
 			$cmd->setIsVisible(1);
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('action');
 		$cmd->setSubType('slider');
@@ -242,9 +252,9 @@ class marantzdenon extends eqLogic {
 		if ($this->getConfiguration('volumemax')>0) {
 			$cmd->setConfiguration('maxValue', $this->getConfiguration('volumemax'));
 		} else {
-			//if ($this->getModelDescItem('MaxVolume')!==false)
-			//	$cmd->setConfiguration('maxValue', $this->getModelDescItem('MaxVolume'));
-			//else
+			if ($this->getModelDescItem('MaxVolume')!==false)
+				$cmd->setConfiguration('maxValue', $this->getModelDescItem('MaxVolume'));
+			else
 				$cmd->setConfiguration('maxValue', MarantzDenonConfig::$MAX_VOLUME);
 		}
 		$cmd->setValue($volume_id);
@@ -257,6 +267,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setLogicalId('sleep');
 			$cmd->setName(__('Sleep', __FILE__));
 			$cmd->setIsVisible(0);
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('action');
 		$cmd->setSubType('slider');
@@ -272,6 +283,7 @@ class marantzdenon extends eqLogic {
 				$cmd->setLogicalId('sleepbtn');
 				$cmd->setName(__('Veille', __FILE__));
 				$cmd->setIsVisible(1);
+				$cmd->setConfiguration('marantzdenon_cmd', true);
 			}
 			$cmd->setType('action');
 			$cmd->setSubType('other');
@@ -292,6 +304,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setName(__('Volume +', __FILE__));
 			$cmd->setIsVisible(1);
 			$cmd->setDisplay('icon', '<i class="fa fa-volume-up"></i>');
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('action');
 		$cmd->setSubType('other');
@@ -306,6 +319,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setName(__('Volume -', __FILE__));
 			$cmd->setIsVisible(1);
 			$cmd->setDisplay('icon', '<i class="fa fa-volume-down"></i>');
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('action');
 		$cmd->setSubType('other');
@@ -320,6 +334,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setIsVisible(1);
 			$cmd->setTemplate('dashboard', 'prise');
 			$cmd->setTemplate('mobile', 'prise');
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('action');
 		$cmd->setSubType('other');
@@ -336,6 +351,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setIsVisible(1);
 			$cmd->setTemplate('dashboard', 'prise');
 			$cmd->setTemplate('mobile', 'prise');
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('action');
 		$cmd->setSubType('other');
@@ -350,6 +366,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setLogicalId('refresh');
 			$cmd->setName(__('Rafraîchir', __FILE__));
 			$cmd->setIsVisible(1);
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('action');
 		$cmd->setSubType('other');
@@ -364,6 +381,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setIsVisible(1);
 			$cmd->setTemplate('dashboard', 'btnCircle');
 			$cmd->setTemplate('mobile', 'binaryDefault');
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('action');
 		$cmd->setSubType('other');
@@ -380,6 +398,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setIsVisible(1);
 			$cmd->setTemplate('dashboard', 'btnCircle');
 			$cmd->setTemplate('mobile', 'binaryDefault');
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('action');
 		$cmd->setSubType('other');
@@ -395,6 +414,7 @@ class marantzdenon extends eqLogic {
 				$cmd->setLogicalId('fav_' . $favCnt);
 				$cmd->setName(__('Favori ' . $favCnt, __FILE__));
 				$cmd->setIsVisible(1);
+				$cmd->setConfiguration('marantzdenon_cmd', true);
 			}
 			$cmd->setType('action');
 			$cmd->setSubType('other');
@@ -416,6 +436,7 @@ class marantzdenon extends eqLogic {
 			$cmd->setName(__('Logo', __FILE__));
 			$cmd->setIsVisible(0);
 			$cmd->setOrder(100);
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 		}
 		$cmd->setType('info');
 		$cmd->setSubType('string');
@@ -441,7 +462,8 @@ class marantzdenon extends eqLogic {
 			if ( !array_key_exists($key, $modelInputArray) ) {
 				$cmd = $this->getCmd(null, 'si_' . $key);
 				if (is_object($cmd)) {
-					$cmd->remove();
+					if ( $cmd->getConfiguration('marantzdenon_cmd', false) )
+						$cmd->remove();
 				}
 			}
 		}
@@ -456,10 +478,11 @@ class marantzdenon extends eqLogic {
 				$cmd->setOrder($nextOrder);
 				$cmd->setIsVisible(1);
 			}
+			$cmd->setConfiguration('marantzdenon_cmd', true);
 			$cmd->setType('action');
 			$cmd->setSubType('other');
 			$cmd->setEventOnly(1);
-				$cmd->setEqLogic_id($this->getId());
+			$cmd->setEqLogic_id($this->getId());
 			$cmd->save();
 		}
 
