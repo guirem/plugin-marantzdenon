@@ -26,7 +26,7 @@
     }
     if (!isset(_cmd.configuration)) {
         _cmd.configuration = {};
-    }
+    } 
 
 	var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
 	//console.log('hh : ' + _cmd.logicalId);

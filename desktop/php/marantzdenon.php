@@ -6,7 +6,7 @@ $plugin = plugin::byId('marantzdenon');
 sendVarToJS('eqType', $plugin->getId());
 $eqLogics = eqLogic::byType($plugin->getId());
 
-?>
+?> 
 
 <div class="row row-overflow">
   <div class="col-lg-2 col-md-3 col-sm-4">
