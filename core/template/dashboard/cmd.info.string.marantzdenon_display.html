@@ -48,9 +48,9 @@
 	<script>
       //$(function() {
         // config
-        var showLogoPlaying="#showPlaying#";
-        if(typeof(showLogoPlaying) !== "boolean"){
-          showLogoPlaying = true;
+        var showLogoPlaying=true;
+        if("#showPlaying#" == "false" || "#showPlaying#" == "1"){
+          showLogoPlaying = false;
         }
         var minWidthShowLogoPlaying=300;
         // -----
@@ -173,7 +173,7 @@
 
 								root.find('.line3').empty().append(soundstring);
 
-								if (data.playingstate===false || showLogoPlaying || root.width() < minWidthShowLogoPlaying)
+								if (data.playingstate===false || !showLogoPlaying || root.width() < minWidthShowLogoPlaying)
 									root.find('.colplaying').hide();
 								else {
 									if ( root.find('.data[data-ret=playinglogo]').val() != data.playinglogo.length) {
