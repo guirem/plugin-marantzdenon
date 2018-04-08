@@ -38,8 +38,10 @@ Plugin pour commander les ampli de marque Marantz et Denon via Jeedom.
 Dashboard
 =======================
 
+
 ![Visuel du dashboard](../assets/dashboard.png "Visuel du dashboard")
 ![Visuel du dashboard](../assets/dashboard2.png "Visuel du dashboard 2")
+![Display 1](../assets/display1.png "Display 1")
 
 Configuration du plugin
 =======================
@@ -53,7 +55,7 @@ La configuration des équipements Marantz/Denon est accessible à partir du menu
 
 Vérifier que l'ampli est bien branché, visible sur le réseau et que vous connaissez l'IP avant d'ajouter un équipement (vous pouvez vérifier facilement en testant que la page http://MonIP/goform/formMainZone_MainZoneXml.xml renvoie quelque chose).
 
-#### Onglet Equipement:
+### Onglet Equipement:
 
 -   **Nom de l’équipement Denon** : nom de votre équipement,
 -   **Objet parent** : indique l’objet parent auquel appartient
@@ -79,7 +81,7 @@ Vérifier que l'ampli est bien branché, visible sur le réseau et que vous conn
 > Cela concerne des modèles récents (après 2016) notamment ceux compatibles HEOS.
 
 
-#### Onglet Commandes
+### Onglet Commandes
 
 Les commandes de bases sont générées automatiquement en fonction du modèle de
 votre amplificateur. Si le modèle n'est pas connu il prendra une configuration la plus étendue.
@@ -90,7 +92,7 @@ Vous pouvez également ajouter de nouvelles commandes (voir section ci-dessous).
 ![Alt text](../assets/command.png "Custom command")
 
 Liste des commandes non visibles par défaut :
-- *Accessible* : info binaire qui donne l'état de disponibilité de l'amli par le plugin (si débranché ou IP non accessible) ;
+- *Accessible* : info binaire qui donne l'état de disponibilité de l'ampli par le plugin (si débranché ou IP non accessible) ;
 - *IP* : l'IP de l'ampli (pour utilisation via scénario) ;
 - *Audio* : mode surround selectionné (ne fonctionne que sur certain modèles) ;
 - *Input* : nom alternatif du nom de l'entrée (tel que renvoyé par l'ampli). A utiliser pour les scénario ;
@@ -104,18 +106,47 @@ Pour les voir sur le dashboard, il faut activer 'Afficher' dans l'onglet des com
 >
 > - La commande de volume se fait sur des valeurs entre 0 et 98 et non pas sur des valeurs en db.
 
+### Afficheur digital
+
+La commande de type information appelée 'Display' permet d'afficher les informations et de contrôler l'ampli au moyen d'un seul composant.
+
+L'afficheur se rafraichit toutes les 20 secondes par défaut.
+
+![Display 1](../assets/display1.png "Display 1")
+![Display 2](../assets/display2.png "Display 2")
+
+Installation / configuration :
+- Affiché par défaut après installation. Désactiver l'affichage pour cacher.
+- Pour une utilisation dans un dashboard, iL est possible d'utiliser un virtuel en créant une commande de type *info / autres* avec pour valeur la commande *Display* de l'ampli. Appliquer alors le widget dashboard *marantzdenon_display* (dans la configuration avancée de la commande)
+- Pour une utilisation dans un design, ajouter la commande *Display* directement dans le design.
+
+> **Notes**  
+
+> Non disponible pour mobile pour le moment
+
+### Image de lecture en cours
+
+La commande de type information appelée 'Logo' (caché par défaut) permet d'afficher l'image de la lecture en cours. Disponible pour certains modèles en mode NET (Internet Radio / Media Server).
+
+L'afficheur se rafraichit toutes les 20 secondes par défaut.
+
+![Display 1](../assets/display_logo.png "Display 1")
+
+> **Notes**   
+> Voir Afficheur digital pour l'inclure dans d'autres composants.
+
 
 Commandes personnalisées
 =============================
 
-#### Commandes simples
+### Commandes simples
 
 - Ajouter un bouton de selection de volume fixe :   
 Créer un nouvelle commande avec pour valeur *volume_set_XX* avec XX pour volume (ex: volume_set_35, volume_set_07)
 - Ajouter une entrée inexistante pour le modèle choisi :   
 Créer un nouvelle commande avec pour valeur *si_XXXXX* avec XXXXX comme nom de l'entrée (ex: si_SPOTIFY).
 
-#### Séquence & commandes sécifiques à l'ampli
+### Séquence & commandes sécifiques à l'ampli
 
 Il est possible d'ajouter des commandes avancées spécifique à l'ampli. La spécification en contient beaucoup et est disponible <a target="_blank" href="../assets/AVRX4000_PROTOCOL(10_3_0)_V03.pdf">ici</a> ou <a target="_blank" href="https://usa.denon.com/us/product/hometheater/receivers/avrx4000?docname=AVRX4000_PROTOCOL(10%203%200)_V03.pdf">là</a>.
 
@@ -153,19 +184,19 @@ Exemples :
 FAQ
 =============================
 
-###### Aucune commande ne semble fonctionner
+#### Aucune commande ne semble fonctionner
 
 - Vérifier que l'ampli est disponible sur le réseau (par ping),
 - Tester que les liens suivant fonctionnent (en mettant la bonne IP) http://MonIP/goform/formMainZone_MainZoneXml.xml (renvoie une page xml), http://MonIP/goform/formiPhoneAppDirect.xml?PWON (allume l'ampli),
 - Si ne fonctionne pas, essayer avec les mêmes url mais sur le port 8080 (http://MonIP:8080/goform/formMainZone_MainZoneXml.xml). Si ok, modifier le champ du plugin avec *IP:8080* au lieu de *IP*.
 
-###### Récupérer l'image de la lecture en cours (selon modèles)
+#### Récupérer l'image de la lecture en cours (selon modèles)
 
 ```
  http://{IP-Ampli}/NetAudio/art.asp-jpg
 ```
 
-###### Autres pages web disponibles (selon modèles)
+#### Autres pages web disponibles (selon modèles)
 
 ```
 http://{IP-Ampli}/goform/formMainZone_MainZoneXml.xml
