@@ -43,6 +43,11 @@ function linkTemplate($templateFilename) {
 	$pathSrc = dirname(__FILE__) . '/../core/template/dashboard/'.$templateFilename;
 	$pathDest = dirname(__FILE__) . '/../../../core/template/dashboard/'.$templateFilename;
 
+	// fix previous fix
+	if (file_exists($pathDest)) {
+		unlink($pathDest);
+	}
+
 	if (!file_exists($pathDest)) {
 		shell_exec('ln -s '.$pathSrc. ' '. $pathDest);
 	}
