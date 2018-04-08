@@ -31,7 +31,8 @@
 </style>
 <div style="min-width:250px;min-height:150px;" class="tooltips cmd cmd-widget ajaxamplidisplay" data-type="info" data-subtype="string" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#" style="display: block;">
   <i class="fa fa-ellipsis-h btcontrol" style="color:grey;position:absolute;padding:5px;top:-10px;left:0px;"></i>
-  <span class="data" data-ret="mute"/><span class="data" data-ret="state"/><span class="data" data-ret="online"/><span class="data" data-ret="playinglogo"/>
+  <i class="fa fa-circle-o-notch fa-spin" style="font-size:55%;color:grey;position:absolute;padding:5px;top:-1px;right:0px;display:none;"></i>
+  <span class="data" data-ret="mute"/><span class="data" data-ret="state"/><span class="data" data-ret="online"/><span class="data" data-ret="playinglogo"></span>
   <center>
 	<table>
 	  <tr>
@@ -44,37 +45,49 @@
       <tr><td colspan="3" class="line4"></td></tr>
 	</table>
 	</center>
-	<script> 
-      //$( document ).ready(function() {
+	<script>
+      //$(function() {
+        // config
+        var showLogoPlaying="#showPlaying#";
+        if(typeof(showLogoPlaying) !== "boolean"){
+          showLogoPlaying = true;
+        }
+        var minWidthShowLogoPlaying=300;
+        // -----
         var stateChange=false;
         function doCmd(cmd) {
-           //console.log(cmd);
            $.ajax({
 			   type: "POST", global : false, url: 'plugins/marantzdenon/core/ajax/marantzdenon.ajax.php',
 			   data: {	action: "sendcmd",equid: "#state#",	cmd: cmd },
-               success: function (data) { if (cmd!='refresh') marantzdenonRefreshDisplay(); }
+               beforeSend : function () { $('.cmd[data-cmd_id=#id#] .fa-spin').show(); },
+               success: function (data) {
+    			   if (cmd!='refresh') { marantzdenonRefreshDisplay(); }
+               },
+			   complete : function () { $('.cmd[data-cmd_id=#id#] .fa-spin').hide(); }
 			});
 		}
-      
+
         // init
-		$('.cmd[data-cmd_id=#id#] .colplaying').hide();
-        $('.cmd[data-cmd_id=#id#] .controlbar').hide();
-        $('.cmd[data-cmd_id=#id#] .line4').hide();
-        $('.cmd[data-cmd_id=#id#] .fa-ellipsis-h').on("click", function() { 
-		 	$('.cmd[data-cmd_id=#id#] .controlbar').toggle();
-            $('.cmd[data-cmd_id=#id#] .line4').toggle();
+		var root = $('.cmd[data-cmd_id=#id#]');
+		root.find('.colplaying').hide();
+		root.find('.fa-spin').hide();
+        root.find('.controlbar').hide();
+        root.find('.line4').hide();
+        root.find('.fa-ellipsis-h').on("click", function() {
+		 	root.find('.controlbar').toggle();
+            root.find('.line4').toggle();
 		});
-        $('.cmd[data-cmd_id=#id#] .fa-volume-up').on("click", function() { 
+        root.find('.fa-volume-up').on("click", function() {
         	doCmd('volume_up');
 		});
-        $('.cmd[data-cmd_id=#id#] .fa-volume-down').on("click", function() { 
+        root.find('.fa-volume-down').on("click", function() {
         	doCmd('volume_down');
 		});
-        $('.cmd[data-cmd_id=#id#] .fa-volume-off').on("click", function() { 
+        root.find('.fa-volume-off').on("click", function() {
             if ($('.data[data-ret=mute]').val()) doCmd('mute_off');
             else doCmd('mute_on');
 		});
-        $('.cmd[data-cmd_id=#id#] .line1').on("click", function() { 
+        root.find('.line1').on("click", function() {
             if ($('.data[data-ret=state]').val()===true) doCmd('off');
             else doCmd('on');
 		});
@@ -82,36 +95,36 @@
         $.ajax({
 			   type: "POST", dataType: 'json', global : false, url: 'plugins/marantzdenon/core/ajax/marantzdenon.ajax.php',
 			   data: {	action: "getCmd",equid: "#state#" },
-               success: function (data) { 
+               success: function (data) {
                		if (data.state == 'ok') {
-                      
+
                           data = $.parseJSON(data.result);
                           var inputStr = ' ';
-                          for(var input in data.input) { 
-                              inputStr += ' <span class="btinput" data="'+input+'">' + data.input[input] + '</span> |'; 
+                          for(var input in data.input) {
+                              inputStr += ' <span class="btinput" data="'+input+'">' + data.input[input] + '</span> |';
                           }
                           inputStr = inputStr.substring(0, inputStr.length-1) + ((Object.keys(data.fav).length>0)?' &nbsp; *':' ');
-                      	  for(var fav in data.fav) { 
-                              inputStr += ' <span class="btinput" data="'+fav+'">' + data.fav[fav] + '</span> *'; 
+                      	  for(var fav in data.fav) {
+                              inputStr += ' <span class="btinput" data="'+fav+'">' + data.fav[fav] + '</span> *';
                           }
                       	  //inputStr = inputStr.substring(0, inputStr.length-1);
                           $('.cmd[data-cmd_id=#id#] .line4').empty().append(inputStr);
-                          $('.btinput').on("click", function() { 
+                          $('.btinput').on("click", function() {
                              doCmd($(this).attr('data'));
                           });
-                          
+
                      }
-               
+
                }
 		  });
         };
-      
+
 		marantzdenonRefreshDisplay = function() {
-			if ($('.cmd[data-cmd_id=#id#]').length==0){  
+			if ($('.cmd[data-cmd_id=#id#]').length==0){
 				clearInterval(window['plugin_marantzdenon_timer_display_#id#']);
-				return; 
+				return;
 			}
-			
+
 			$.ajax({
 				type: "POST",
 				url: 'plugins/marantzdenon/core/ajax/marantzdenon.ajax.php',
@@ -122,82 +135,82 @@
 				dataType: 'json',
 				global : false,
 				success: function (data) {
-					
+					var root = $('.cmd[data-cmd_id=#id#]');
 					if (data.state != 'ok') {
-						$('.cmd[data-cmd_id=#id#] .line1').empty().append('Error');
-						$('.cmd[data-cmd_id=#id#] .line2').empty().hide();
-						$('.cmd[data-cmd_id=#id#] .line3').empty().hide();
-                        $('.cmd[data-cmd_id=#id#] .controlbar').hide();
-                        $('.cmd[data-cmd_id=#id#] .line4').hide();
+						root.find('.line1').empty().append('Error');
+						root.find('.line2').empty().hide();
+						root.find('.line3').empty().hide();
+                        root.find('.controlbar').hide();
+                        root.find('.line4').hide();
 					}
 					else {
 						data = $.parseJSON(data.result);
                         if ( $('.data[data-ret=online]').val() != data.online )
                           	doCmd('refresh');
-                      
+
 						$('.data[data-ret=online]').val( data.online );
-                      
+
 						if (data.online===true) {
                             $('.data[data-ret=mute]').val( data.mute );
                             $('.data[data-ret=state]').val( data.state );
-                          
+
 							if (data.state===true) {
-   						       //$('.cmd[data-cmd_id=#id#] .controlbar').show();
-                               //$('.cmd[data-cmd_id=#id#] .line4').show();
+   						       //root.find('.controlbar').show();
+                               //root.find('.line4').show();
 								soundstring = 'Vol ' + data.volume;
-								$('.cmd[data-cmd_id=#id#] .line2').empty().show();
-								$('.cmd[data-cmd_id=#id#] .line3').empty().show();
+								root.find('.line2').empty().show();
+								root.find('.line3').empty().show();
 								if (data.mute===true)
 									soundstring = '<b style="color:yellow;">MUTE</b> (' + soundstring + ')';
 								if (data.surround===true)
 									soundstring = data.surround + ' | ' + soundstring;
-									
-								$('.cmd[data-cmd_id=#id#] .line1').empty().append(data.input);
+
+								root.find('.line1').empty().append(data.input);
 								if (data.netinfo===false)
-									$('.cmd[data-cmd_id=#id#] .line2').empty().hide();
+									root.find('.line2').empty().hide();
 								else
-									$('.cmd[data-cmd_id=#id#] .line2').empty().append(data.netinfo);
-								
-								$('.cmd[data-cmd_id=#id#] .line3').empty().append(soundstring);
-								
-								if (data.playingstate===false)
-									$('.cmd[data-cmd_id=#id#] .colplaying').hide();
+									root.find('.line2').empty().append(data.netinfo);
+
+								root.find('.line3').empty().append(soundstring);
+
+								if (data.playingstate===false || showLogoPlaying || root.width() < minWidthShowLogoPlaying)
+									root.find('.colplaying').hide();
 								else {
-									if ( $('.data[data-ret=playinglogo]').val().length != data.playinglogo.length) {
-										$('.cmd[data-cmd_id=#id#] .ampliplaying').attr('src','data:image/png;base64,' + data.playinglogo);
-										$('.data[data-ret=playinglogo]').val(data.playinglogo.length);
-										$('.cmd[data-cmd_id=#id#] .colplaying').show();
+									if ( root.find('.data[data-ret=playinglogo]').val() != data.playinglogo.length) {
+										root.find('.ampliplaying').attr('src','data:image/png;base64,' + data.playinglogo);
+										root.find('.data[data-ret=playinglogo]').val(data.playinglogo.length);
+										root.find('.colplaying').show();
 									}
 								}
 							} else {
-								$('.cmd[data-cmd_id=#id#] .line1').empty().append(data.state);
-								$('.cmd[data-cmd_id=#id#] .line3').empty().append(data.input);
-								$('.cmd[data-cmd_id=#id#] .line2').empty().hide();
-								$('.cmd[data-cmd_id=#id#] .colplaying').hide();
-                                $('.cmd[data-cmd_id=#id#] .controlbar').hide();
-                                $('.cmd[data-cmd_id=#id#] .line4').hide();
+								root.find('.line1').empty().append(data.state);
+								root.find('.line3').empty().append(data.input);
+								root.find('.line2').empty().hide();
+								root.find('.colplaying').hide();
+                                root.find('.controlbar').hide();
+                                root.find('.line4').hide();
 							}
 						} else {
-							$('.cmd[data-cmd_id=#id#] .line1').empty().append(data.online);
-							$('.cmd[data-cmd_id=#id#] .line2').empty().hide();
-							$('.cmd[data-cmd_id=#id#] .line3').empty().hide();
-                            $('.cmd[data-cmd_id=#id#] .colplaying').hide();
-                            $('.cmd[data-cmd_id=#id#] .controlbar').hide();
-                            $('.cmd[data-cmd_id=#id#] .line4').hide();
+							root.find('.line1').empty().append(data.online);
+							root.find('.line2').empty().hide();
+							root.find('.line3').empty().hide();
+                            root.find('.colplaying').hide();
+                            root.find('.controlbar').hide();
+                            root.find('.line4').hide();
 						}
 					}
 				},
 				error: function (data) {
-					$('.cmd[data-cmd_id=#id#] .line1').empty().append('Error');
-					$('.cmd[data-cmd_id=#id#] .line2').empty().hide();
-					$('.cmd[data-cmd_id=#id#] .line3').empty().hide();
-                    $('.cmd[data-cmd_id=#id#] .line4').hide();
+					root.find('.line1').empty().append('Error');
+					root.find('.line2').empty().hide();
+					root.find('.line3').empty().hide();
+                    root.find('.line4').hide();
 				}
 			 });
 		};
         marantzdenonLoadCommands();
 		marantzdenonRefreshDisplay();
-		if (typeof window['plugin_marantzdenon_timer_display_#id#'] !== 'undefined') 
+		if (typeof window['plugin_marantzdenon_timer_display_#id#'] !== 'undefined')
 			clearInterval(window['plugin_marantzdenon_timer_display_#id#']);
 		window['plugin_marantzdenon_timer_display_#id#'] = setInterval(marantzdenonRefreshDisplay, 20000);
       //});
