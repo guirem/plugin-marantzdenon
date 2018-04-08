@@ -115,7 +115,7 @@ foreach (object::all() as $object) {
 			echo '<option value="' .$key. '">' .$value['Name']. '</option>';
 		}
 	}
-?>
+?> 
           </select>
         </div>
 		<i>Essayez plusieurs modèles afn de trouver la configuration la plus proche.</i>

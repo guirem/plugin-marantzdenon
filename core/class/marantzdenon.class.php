@@ -88,7 +88,7 @@ class marantzdenon extends eqLogic {
 			if ( isset($mod[$key]) )
 				return $mod[$key];
 		return null;
-	}
+	} 
 
 	public function postSave() {
 
