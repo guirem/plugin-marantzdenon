@@ -1,21 +1,21 @@
 {
     "plugins\/marantzdenon\/plugin_info\/info.xml": {
-        "Aucune": "Aucune"
+        "Aucune": "None"
     },
     "plugins\/marantzdenon\/desktop\/php\/marantzdenon.php": {
-        "Ajouter une commande": "Ajouter une commande",
-        "Rechercher": "Rechercher",
+        "Ajouter une commande": "Add a command",
+        "Rechercher": "Search",
         "Mes Amplis": "Mes Amplis",
         "Général": "Général",
         "Objet parent": "Objet parent",
         "Aucun": "Aucun",
-        "Activer": "Activer",
+        "Activer": "Enable",
         "Visible": "Visible",
         "Equipement": "Equipement",
 		"Commandes": "Commandes",
-        "Ajouter": "Ajouter",
-        "Supprimer": "Supprimer",
-        "Sauvegarder": "Sauvegarder",
+        "Ajouter": "Add",
+        "Supprimer": "Delete",
+        "Sauvegarder": "Save",
         "Catégorie": "Catégorie",
         "Configuration avancée": "Configuration avancée",
         "Nombre de favoris": "Nombre de favoris",
@@ -31,7 +31,7 @@
         "Afficher": "Afficher",
         "Tester": "Tester",
         "Nom": "Nom",
-        "Supprimer": "Supprimer",
+        "Supprimer": "Delete",
         "Icône": "Icône",
         "Commande": "Commande"
     },
