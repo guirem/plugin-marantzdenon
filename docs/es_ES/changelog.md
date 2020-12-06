@@ -4,6 +4,10 @@ Liste des versions du plugin marantzdenon.
 
 *[Retour à la documentation](index.md)*
 
+## Version du 06 décembre 2020
+
+- Compatibilité v4
+
 ## Version du 07 avril 2018
 
 - Ajout d'un affichage dynamique pour dashbaord (voir doc pour utilisation)

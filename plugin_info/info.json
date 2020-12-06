@@ -9,5 +9,7 @@
 	"hasOwnDeamon" : false,
     "hasDependency" : false,
 	"changelog" : "https://github.com/guirem/plugin-marantzdenon/blob/master/docs/fr_FR/changelog.md",
-	"documentation" : "https://github.com/guirem/plugin-marantzdenon/blob/master/docs/fr_FR/index.md"
+    "documentation" : "https://github.com/guirem/plugin-marantzdenon/blob/master/docs/fr_FR/index.md",
+    "compatibility" : ["miniplus","smart","rpi","docker","diy","v4"],
+    "languages" : ["fr_FR","en_US"]
 }
